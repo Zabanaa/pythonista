@@ -1,0 +1,44 @@
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+py[cod]
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+bin/
+build/
+develop-eggs/
+dist/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+.DS_Store
+.Python
+*.pyc
+*.pyo
+*.swp
+*.swo
+.DS_Store
+*.pyc
+*.pyo
+env
+env*
+dist
+build
+*.egg
+*.egg-info
+_mailinglist
+.tox
+.cache/
+.idea/
+node_modules
+include
