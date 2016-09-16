@@ -1,4 +1,19 @@
-from app import app
-from flask_sqlalchemy import SQLAlchemy
+from app import db
+
+# Create Models here
+
+class User(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(40), nullable=False)
+    email = db.Column(db.String(40), nullable=False)
+    password = db.Column(db.String(18), nullable=False)
 
 
+    def __init__(self, username, email, password):
+        self.username = username
+        self.email = email
+        self.password = password
+
+    def __repr__(self):
+       return "User %s" % (self.username) 
