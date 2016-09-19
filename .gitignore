@@ -8,6 +8,7 @@ py[cod]
 
 # Distribution / packaging
 .Python
+migrations/
 env/
 bin/
 build/
