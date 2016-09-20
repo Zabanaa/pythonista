@@ -23,5 +23,18 @@ class Company(db.Model):
         self.linkedin   = linkedin
         self.bio        = bio
 
+    def serialise(self):
+        return {
+            'email'     : self.email,
+            'password'  : self.password,
+            'name'      : self.name,
+            'location'  : self.location,
+            'website'   : self.website,
+            'twitter'   : self.twitter,
+            'facebook'  : self.facebook,
+            'linkedin'  : self.linkedin,
+            'bio'       : self.bio
+        }
+
     def __repr__(self):
-       return "Company %s" % (self.name)
+        return "Company %s" % (self.name)
