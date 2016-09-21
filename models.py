@@ -24,17 +24,7 @@ class Company(db.Model):
         self.bio        = bio
 
     def serialise(self):
-        return {
-            'email'     : self.email,
-            'password'  : self.password,
-            'name'      : self.name,
-            'location'  : self.location,
-            'website'   : self.website,
-            'twitter'   : self.twitter,
-            'facebook'  : self.facebook,
-            'linkedin'  : self.linkedin,
-            'bio'       : self.bio
-        }
+        return {key:value for key, value in self.__dict__.items()}
 
     def __repr__(self):
         return "Company %s" % (self.name)
