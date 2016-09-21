@@ -43,3 +43,4 @@ _mailinglist
 .idea/
 node_modules
 include
+config.py
