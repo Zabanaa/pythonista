@@ -11,25 +11,26 @@ from models import Company
 
 @app.route('/')
 def index():
-    return app.send_static_file('index.html')
+    return "hello this is the index page newwww one brruuuv"
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
-    payload = request.json
-    d = payload.get
-    if payload:
+    if request.method == "POST":
+        payload = request.json
+        d = payload.get
+
         try:
             new_company = Company(d('email'), d('password'), d('name'), d('location'), d('website'), d('twitter'),\
-                                     d('facebook'), d('linkedin'), d('bio'))
+                                                                            d('facebook'), d('linkedin'), d('bio'))
             db.session.add(new_company)
             db.session.commit()
             return jsonify(new_company.serialise()), 201
+
         except Exception as e:
             if "violates unique constraint" in str(e.__dict__['orig']):
-                return send_error(400, "A company is already registered using this email") 
-
-    return "<h1> Registration Page Bruuuuv </h1>"
-
+                return jsonify({"code": 400, "message": "A company is already registered using this email"})
+    else:
+        return "Whuuuuh ? Just let man register"
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
