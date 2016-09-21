@@ -6,7 +6,7 @@ app = Flask(__name__)
 app.config.from_pyfile('config.cfg')
 
 db = SQLAlchemy(app)
-import models
+from models import Company
 
 @app.route('/')
 def index():
@@ -18,7 +18,7 @@ def register():
     d = payload.get
     if payload:
         try:
-            new_company = models.Company(d('email'), d('password'), d('name'), d('location'), d('website'), d('twitter'),\
+            new_company = Company(d('email'), d('password'), d('name'), d('location'), d('website'), d('twitter'),\
                                      d('facebook'), d('linkedin'), d('bio'))
             db.session.add(new_company)
             db.session.commit()
