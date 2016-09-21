@@ -13,6 +13,7 @@ class Company(db.Model):
     bio         = db.Column(db.Text(), nullable=True)
 
     def __init__(self, email, password, name, location, website, twitter, facebook, linkedin, bio):
+        self.id = self.query.order_by("id desc").first().id + 1
         self.email      = email
         self.password   = password
         self.name       = name
@@ -24,7 +25,18 @@ class Company(db.Model):
         self.bio        = bio
 
     def serialise(self):
-        return {key:value for key, value in self.__dict__.items()}
+        return {
+            "id"        : self.id,
+            "email"     : self.email,
+            "password"  : self.password,
+            "name"      : self.name,
+            "location"  : self.location,
+            "website"   : self.website,
+            "twitter"   : self.twitter,
+            "facebook"  : self.facebook,
+            "linkedin"  : self.linkedin,
+            "bio"       : self.bio
+        }
 
     def __repr__(self):
         return "Company %s" % (self.name)
