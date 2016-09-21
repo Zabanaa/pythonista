@@ -3,7 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from helpers import send_error
 
 app = Flask(__name__)
-app.config.from_pyfile('config.cfg')
+app.config.from_object('config.DevelopmentConfig')
+
 
 db = SQLAlchemy(app)
 from models import Company
