@@ -6,3 +6,10 @@ def send_error(code, message):
         'message': message
     }
     return jsonify(error)
+
+def get_missing_fields(response_body):
+    missing_fields = []
+    for key, value in response_body.items():
+        if response_body[key] == None:
+            missing_fields.append(key)
+    return missing_fields
