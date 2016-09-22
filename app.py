@@ -8,7 +8,8 @@ app.config.from_object('config.DevelopmentConfig')
 
 
 db = SQLAlchemy(app)
-from models import Company
+from models import * 
+
 
 @app.route('/')
 def index():
