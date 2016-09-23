@@ -8,12 +8,12 @@ app.config.from_object('config.DevelopmentConfig')
 
 
 db = SQLAlchemy(app)
-from models import * 
+from models import *
 
 
 @app.route('/')
 def index():
-    return "hello this is the index page newwww one brruuuv"
+    return "hello this is the index page newwww one brruuuv", 200
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -21,7 +21,7 @@ def register():
         payload = request.json
         d = payload.get
         try:
-            new_company = Company(d('email'), d('password'), d('name'), d('location'), d('website'), d('twitter'),\
+            new_company = models.Company(d('email'), d('password'), d('name'), d('location'), d('website'), d('twitter'),\
                                                                             d('facebook'), d('linkedin'), d('bio'))
             db.session.add(new_company)
             db.session.commit()
@@ -37,7 +37,7 @@ def register():
             else:
                 return jsonify({"code": "400", "message": cause_or_error}), 400
     else:
-        return "Whuuuuh ? Just let man register"
+        return "Whuuuuh ? Just let man register", 200
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
