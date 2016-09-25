@@ -16,10 +16,12 @@ class TestCase(unittest.TestCase):
         db.drop_all()
 
     def test_get_index_works(self):
-        pass
+        response = self.app.get('/')
+        self.assertEqual(response.status_code, 200)
 
     def test_get_register_works(self):
-        pass
+        register = self.app.get('/register')
+        self.assertEqual(register.status_code, 200)
 
     def test_post_register_works(self):
         pass
