@@ -21,7 +21,7 @@ def register():
         payload = request.json
         d = payload.get
         try:
-            new_company = models.Company(d('email'), d('password'), d('name'), d('location'), d('website'), d('twitter'),\
+            new_company = Company(d('email'), d('password'), d('name'), d('location'), d('website'), d('twitter'),\
                                                                             d('facebook'), d('linkedin'), d('bio'))
             db.session.add(new_company)
             db.session.commit()
