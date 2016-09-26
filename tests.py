@@ -1,4 +1,5 @@
 # Test file
+from tornado import escape
 import json
 import unittest
 from app import app, db
@@ -39,7 +40,7 @@ class TestCase(unittest.TestCase):
 
     # test violate not null constraint on register page
     def test_register_missing_fields(self):
-        data = json.dumps( dict(
+        json_data = json.dumps( dict(
                 email="paris@numa.com",
                 location="Paris, France",
                 website="paris.numa.com",
@@ -50,7 +51,8 @@ class TestCase(unittest.TestCase):
             )
         )
         response = self.app.post('/register', data=json_data, content_type="application/json")
-
+        server_response = escape.json_decode(response.data)
+        self.assertTrue("wagwaan bruv" in server_response['message'])
     # test violate unique constraint on register page
     # test login errthang fine
     # test login failed
