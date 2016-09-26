@@ -16,17 +16,41 @@ class TestCase(unittest.TestCase):
         db.drop_all()
 
     def test_get_index_works(self):
-        response = self.app.get('/')
+        response = self.app.get('/', content_type="text/html")
         self.assertEqual(response.status_code, 200)
 
     def test_get_register_works(self):
-        register = self.app.get('/register')
-        self.assertEqual(register.status_code, 200)
+        response = self.app.get('/register', content_type="text/html")
+        self.assertEqual(response.status_code, 200)
 
     def test_post_register_works(self):
-        pass
+        response = self.app.post('/register', data=json.dumps(dict(
+            email="paris@numa.com",
+            password="numaparis",
+            name="Numa Paris",
+            location="Paris, France",
+            website="paris.numa.com",
+            twitter="numa_paris",
+            facebook="numaparis",
+            linkedin="numaparis",
+            bio="Startup hub in Paris"
+        )), content_type="application/json")
+        self.assertEqual(response.status_code, 201)
 
     # test violate not null constraint on register page
+    def test_register_missing_fields(self):
+        data = json.dumps( dict(
+                email="paris@numa.com",
+                location="Paris, France",
+                website="paris.numa.com",
+                twitter="numa_paris",
+                facebook="numaparis",
+                linkedin="numaparis",
+                bio="hweoiriewjr"
+            )
+        )
+        response = self.app.post('/register', data=json_data, content_type="application/json")
+
     # test violate unique constraint on register page
     # test login errthang fine
     # test login failed
