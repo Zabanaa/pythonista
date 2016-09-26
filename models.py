@@ -13,7 +13,7 @@ class Company(db.Model):
     bio         = db.Column(db.Text(), nullable=True)
 
     def __init__(self, email, password, name, location, website, twitter, facebook, linkedin, bio):
-        self.id = self.query.order_by("id desc").first().id + 1
+#        self.id = self.query.order_by("id desc").first().id + 1
         self.email      = email
         self.password   = password
         self.name       = name
