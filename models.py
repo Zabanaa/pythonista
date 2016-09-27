@@ -28,7 +28,6 @@ class Company(db.Model):
         return {
             "id"        : self.id,
             "email"     : self.email,
-            "password"  : self.password,
             "name"      : self.name,
             "location"  : self.location,
             "website"   : self.website,
