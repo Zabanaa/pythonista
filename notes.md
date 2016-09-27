@@ -101,3 +101,14 @@ type
 
 
 POST to /api/jobs/id
+
+
+# How to install bcrypt
+
+sudo apt-get update 
+sudo apt-get install -y libffi-dev
+sudo apt-get install -y libssl-dev
+
+sudo pip install bcrypt
+
+
