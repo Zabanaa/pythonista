@@ -29,13 +29,13 @@ def register():
         except IntegrityError as e:
             cause_of_error = str(e.__dict__['orig'])
             if "violates unique constraint" in cause_of_error:
-                return jsonify({"code": 400, "message": "A company is already registered using this email"}), 400
+                return jsonify({"status_code": 409, "message": "A company is already registered using this email"}), 409
             elif "not-null" in cause_of_error:
                 missing_fields = get_missing_fields(e.__dict__['params'])
-                return jsonify({"code": "400", "missing_fields": missing_fields, "message": "wagwaan bruv, you missed\
-                some fields", "reason": cause_of_error}), 400
+                return jsonify({"status_code": 400, "missing_fields": missing_fields, "message": "You didn't pass\
+                some of the required fields", "reason": cause_of_error}), 400
             else:
-                return jsonify({"code": "400", "message": cause_or_error}), 400
+                return jsonify({"status_code": 400, "message": cause_or_error}), 400
     else:
         return "Whuuuuh ? Just let man register", 200
 
