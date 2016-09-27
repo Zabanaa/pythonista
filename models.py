@@ -4,7 +4,7 @@ class Company(db.Model):
     id          = db.Column(db.Integer, primary_key=True)
     email       = db.Column(db.String(100), nullable=False, unique=True)
     password    = db.Column(db.String(32), nullable=False)
-    name        = db.Column(db.String(40), nullable=False, unique=True)
+    name        = db.Column(db.String(40), nullable=False)
     location    = db.Column(db.String(50), nullable=True)
     website     = db.Column(db.String(60), nullable=True)
     twitter     = db.Column(db.String(60), nullable=True)
