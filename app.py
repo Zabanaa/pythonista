@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
-from helpers import send_error, get_missing_fields
+from helpers import send_error, get_missing_fields, hash_user_password
 
 app = Flask(__name__)
 app.config.from_object('config.DevelopmentConfig')
@@ -21,7 +21,7 @@ def register():
         payload = request.json
         d = payload.get
         try:
-            new_company = Company(d('email'), d('password'), d('name'), d('location'), d('website'), d('twitter'),\
+            new_company = Company(d('email'), hash_user_password(d('password')), d('name'), d('location'), d('website'), d('twitter'),\
                                                                             d('facebook'), d('linkedin'), d('bio'))
             db.session.add(new_company)
             db.session.commit()
