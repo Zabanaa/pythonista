@@ -73,12 +73,23 @@ class TestCase(unittest.TestCase):
         signup          = self.app.post('/register', data=json.dumps(numa), content_type="application/json")
         login_response  = self.app.post('/login', data=json.dumps(numa_login_creds), content_type="application/json")
 
-        self.assertTrue(login_response.status_code, 200)
+        self.assertEqual(login_response.status_code, 200)
         json_login_response = escape.json_decode(login_response.data)
         self.assertIn("you are logged in", json_login_response['message'])
-        self.assertEqual(json_login_response['code'], 200)
+        self.assertEqual(json_login_response['status_code'], 200)
 
     # test login with wrong password
+    def test_login_incorrect_password(self):
+        signup          = self.app.post('/register', data=json.dumps(numa), content_type="application/json")
+        login_response  = self.app.post('/login', data=json.dumps(dict(
+            email="paris@numa.com",
+            password="wrongpasswordbruv"
+        )), content_type="application/json")
+
+        json_login_response = escape.json_decode(login_response.data)
+        self.assertEqual(login_response.status_code, 401)
+        self.assertEqual(401, json_login_response['status_code'])
+        self.assertIn("Sorry, the password you provided is incorrect", json_login_response['message'])
     # test login with wrong username
     # test logout (look into the session object maybe ?)
     # test invalid JSON
