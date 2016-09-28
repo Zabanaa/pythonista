@@ -60,7 +60,7 @@ def login():
         company = Company.query.filter_by(email=email).first()
 
         if check_password_hash(company.password, password) == True:
-            return jsonify({"message": "you are logged in", "code": 200}), 200
+            return jsonify({"message": "you are logged in", "status_code": 200}), 200
         else:
             return send_error(401, "Sorry, the password you provided is incorrect") 
 
