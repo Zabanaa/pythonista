@@ -19,11 +19,20 @@ def index():
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     if request.method == "POST":
-        payload = request.json
-        d = payload.get
+        form = request.get_json()
+        value = form.get
         try:
-            new_company = Company(d('email'), hash_user_password(d('password')), d('name'), d('location'), d('website'), d('twitter'),\
-                                                                            d('facebook'), d('linkedin'), d('bio'))
+            new_company = Company(
+                value('email'),
+                hash_user_password(value('password')),
+                value('name'),
+                value('location'),
+                value('website'),
+                value('twitter'),
+                value('facebook'),
+                value('linkedin'),
+                value('bio')
+            )
             db.session.add(new_company)
             db.session.commit()
             return jsonify(new_company.serialise()), 201
