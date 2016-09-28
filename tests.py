@@ -75,6 +75,11 @@ class TestCase(unittest.TestCase):
         self.assertTrue("A company is already registered" in server_response['message'])
         self.assertEqual(server_response['status_code'], 409)
 
+    def test_login_page_works(self):
+        response = self.app.get('/login', content_type="text/html")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(b"Bruv you want to login ?", response.data)
+
     # test login errthang fine
     # test login failed
     # test logout (look into the session object maybe ?)
