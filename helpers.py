@@ -2,8 +2,9 @@ from flask import jsonify
 import bcrypt
 
 def hash_user_password(password):
-    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-    return hashed_password
+    if password is not None:
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        return hashed_password
 
 def send_error(status_code, message=None, missing_fields=None):
 
