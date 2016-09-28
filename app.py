@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
 from helpers import send_error, get_missing_fields, hash_user_password
+from tornado import escape
 
 app = Flask(__name__)
 app.config.from_object('config.DevelopmentConfig')
@@ -37,6 +38,13 @@ def register():
                 return jsonify({"status_code": 400, "message": cause_or_error}), 400
     else:
         return "Whuuuuh ? Just let man register", 200
+
+@app.route('/login', methods=["GET", "POST"])
+def login():
+    if request.method == 'POST':
+        return jsonify(request.get_json()), 200
+    else:
+        return 'Bruv you want to login ?', 200
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
