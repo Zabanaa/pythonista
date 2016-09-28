@@ -1,9 +1,9 @@
 from flask import jsonify
-import bcrypt
+from werkzeug.security import generate_password_hash
 
 def hash_user_password(password):
     if password is not None:
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        hashed_password = generate_password_hash(password)
         return hashed_password
 
 def send_error(status_code, message=None, missing_fields=None):
