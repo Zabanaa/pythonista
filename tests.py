@@ -52,7 +52,7 @@ class TestCase(unittest.TestCase):
         )
         response = self.app.post('/register', data=json_data, content_type="application/json")
         server_response = escape.json_decode(response.data)
-        self.assertTrue("Incomplete request. Missing required fields" in server_response['message'])
+        self.assertIn("Incomplete request. Missing required fields", server_response['message'])
         self.assertEqual(server_response['status_code'], 409)
 
     # test violate unique constraint on register page
@@ -72,7 +72,7 @@ class TestCase(unittest.TestCase):
         response_one = self.app.post('/register', data=json_data, content_type="application/json")
         response_two = self.app.post('/register', data=json_data, content_type="application/json")
         server_response = escape.json_decode(response_two.data)
-        self.assertTrue("A company is already registered" in server_response['message'])
+        self.assertIn("A company is already registered", server_response['message'])
         self.assertEqual(server_response['status_code'], 409)
 
     def test_login_page_works(self):
@@ -81,7 +81,9 @@ class TestCase(unittest.TestCase):
         self.assertEqual(b"Bruv you want to login ?", response.data)
 
     # test login errthang fine
-    # test login failed
+
+    # test login with wrong password
+    # test login with wrong username
     # test logout (look into the session object maybe ?)
     # test invalid JSON
 
