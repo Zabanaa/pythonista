@@ -5,6 +5,20 @@ import unittest
 from app import app, db
 from models import *
 
+numa = dict(
+    email="paris@numa.com",
+    password="numaparis",
+    name="Numa Paris",
+    location="Paris, France",
+    website="paris.numa.com",
+    twitter="numa_paris",
+    facebook="numaparis",
+    linkedin="numaparis",
+    bio="Startup hub in Paris"
+)
+
+numa_login_creds = dict(email="paris@numa.com", password="numaparis")
+
 class TestCase(unittest.TestCase):
 
     def setUp(self):
@@ -25,17 +39,7 @@ class TestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_post_register_works(self):
-        response = self.app.post('/register', data=json.dumps(dict(
-            email="paris@numa.com",
-            password="numaparis",
-            name="Numa Paris",
-            location="Paris, France",
-            website="paris.numa.com",
-            twitter="numa_paris",
-            facebook="numaparis",
-            linkedin="numaparis",
-            bio="Startup hub in Paris"
-        )), content_type="application/json")
+        response = self.app.post('/register', data=json.dumps(numa), content_type="application/json")
         self.assertEqual(response.status_code, 201)
 
     # test violate not null constraint on register page
@@ -43,10 +47,6 @@ class TestCase(unittest.TestCase):
         json_data = json.dumps( dict(
                 email="paris@numa.com",
                 location="Paris, France",
-                website="paris.numa.com",
-                twitter="numa_paris",
-                facebook="numaparis",
-                linkedin="numaparis",
                 bio="hweoiriewjr"
             )
         )
@@ -57,20 +57,8 @@ class TestCase(unittest.TestCase):
 
     # test violate unique constraint on register page
     def test_register_username_taken(self):
-        json_data = json.dumps( dict(
-                email="paris@numa.com",
-                password="hehkwehwke",
-                name="numa paris",
-                location="Paris, France",
-                website="paris.numa.com",
-                twitter="numa_paris",
-                facebook="numaparis",
-                linkedin="numaparis",
-                bio="hweoiriewjr"
-            )
-        )
-        response_one = self.app.post('/register', data=json_data, content_type="application/json")
-        response_two = self.app.post('/register', data=json_data, content_type="application/json")
+        response_one = self.app.post('/register', data=json.dumps(numa), content_type="application/json")
+        response_two = self.app.post('/register', data=json.dumps(numa), content_type="application/json")
         server_response = escape.json_decode(response_two.data)
         self.assertIn("A company is already registered", server_response['message'])
         self.assertEqual(server_response['status_code'], 409)
@@ -81,6 +69,15 @@ class TestCase(unittest.TestCase):
         self.assertEqual(b"Bruv you want to login ?", response.data)
 
     # test login errthang fine
+    def test_login_errthang_fine(self):
+        signup          = self.app.post('/register', data=json.dumps(numa), content_type="application/json")
+        login_response  = self.app.post('/login', data=json.dumps(numa_login_creds), content_type="application/json")
+
+        self.assertTrue(login_response.status_code, 200)
+        json_login_response = escape.json_decode(login_response.data)
+        self.assertIn("you are logged in", json_login_response['message'])
+        self.assertEqual(json_login_response['code'], 200)
+
     # test login with wrong password
     # test login with wrong username
     # test logout (look into the session object maybe ?)
