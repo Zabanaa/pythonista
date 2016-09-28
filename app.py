@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
 from helpers import send_error, get_missing_fields, hash_user_password
 from tornado import escape
+from werkzeug.security import check_password_hash
 
 app = Flask(__name__)
 app.config.from_object('config.DevelopmentConfig')
@@ -50,8 +51,29 @@ def register():
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
+
     if request.method == 'POST':
-        return jsonify(request.get_json()), 200
+        login_credentials = request.get_json()
+        value = login_credentials.get
+        email = value('email')
+        password = value('password')
+        company = Company.query.filter_by(email=email).first()
+
+        if check_password_hash(company.password, password) == True:
+            return jsonify({"message": "you are logged in"})
+        else:
+            return send_error(401, "Sorry, the password you provided is incorrect") 
+
+        # if passwords match
+            # set the session
+            # log the user in
+            # redirect them to the home page
+
+        # else return a 401 unauthorised
+        # with a message saying wrong password
+
+        return jsonify(login_credentials)
+
     else:
         return 'Bruv you want to login ?', 200
 
