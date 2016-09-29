@@ -12,14 +12,14 @@ def send_error(status_code, message=None, missing_fields=None):
 
         error = {
             'status_code': status_code,
-            'message': "Incomplete request. Missing required fields",
+            'message': "Incomplete request. Missing required fields".lower(),
             'missing_fields': missing_fields,
         }
 
     else:
         error = {
             'status_code': status_code,
-            'message': message
+            'message': message.lower()
         }
 
     return jsonify(error), status_code
