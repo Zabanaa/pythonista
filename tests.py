@@ -55,7 +55,9 @@ class TestCase(unittest.TestCase):
 
     def test_post_register_works(self):
         response = self.post('/register', self.numa)
+        json_response = self.decode_json(response.data)
         self.assertEqual(response.status_code, 201)
+        self.assertIn('resource', json_response)
 
     def test_register_missing_fields(self):
         response = self.post('/register', self.numa_missing_fields)
@@ -84,7 +86,6 @@ class TestCase(unittest.TestCase):
         self.assertIn("you are logged in", json_login_response['message'])
         self.assertEqual(json_login_response['status_code'], 200)
 
-
     def test_login_incorrect_password(self):
         signup          = self.post('/register', self.numa)
         login_response  = self.post('/login', self.login_wrongpw)
@@ -92,8 +93,16 @@ class TestCase(unittest.TestCase):
         self.assertEqual(login_response.status_code, 401)
         self.assertEqual(401, json_login_response['status_code'])
         self.assertIn("Sorry, the password you provided is incorrect".lower(), json_login_response['message'])
-    # test login with wrong username
+
+    def test_login_incorrect_username(self):
+        pass
+
+
     # test logout (look into the session object maybe ?)
+
+
+
+
     # test invalid JSON
 
 if __name__ == "__main__":
