@@ -83,7 +83,7 @@ def login():
         else:
             return send_json(401, "Sorry, the password you provided is incorrect")
     else:
-        return send_json(401, "The company does not exist bruv whuh you doin ?")
+        return send_json(401, "Sorry, there is no company registered at this address")
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
