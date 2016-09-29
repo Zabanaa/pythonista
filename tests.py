@@ -25,6 +25,7 @@ class TestCase(unittest.TestCase):
 
     login_creds = dict(email="paris@numa.com", password="numaparis")
     login_wrongpw = dict(email="paris@numa.com", password="wrongpwd")
+    login_wrong_user = dict(email="xsdsdsjwparis@numa.com", password="wrongpwd")
 
     def setUp(self):
         app.config.from_object('config.TestingConfig')
@@ -95,13 +96,12 @@ class TestCase(unittest.TestCase):
         self.assertIn("Sorry, the password you provided is incorrect".lower(), json_login_response['message'])
 
     def test_login_incorrect_username(self):
-        pass
-
-
-    # test logout (look into the session object maybe ?)
-
-
-
+        signup = self.post('/register', self.numa)
+        login_response = self.post('/login', self.login_wrong_user)
+        json_response = self.decode_json(login_response.data)
+        self.assertEqual(login_response.status_code, 401)
+        self.assertEqual(json_response['status_code'], 401)
+        self.assertIn("the company does not exist bruv whuh you doin ?", json_response['message'])
 
     # test invalid JSON
 
