@@ -17,37 +17,38 @@ from models import *
 def index():
     return "hello this is the index page newwww one brruuuv", 200
 
-@app.route("/register", methods=['GET', 'POST'])
-def register():
-    if request.method == "POST":
-        form = request.get_json()
-        value = form.get
-        try:
-            new_company = Company(
-                value('email'),
-                hash_user_password(value('password')),
-                value('name'),
-                value('location'),
-                value('website'),
-                value('twitter'),
-                value('facebook'),
-                value('linkedin'),
-                value('bio')
-            )
-            db.session.add(new_company)
-            db.session.commit()
-            return jsonify(new_company.serialise()), 201
-        except IntegrityError as e:
-            cause_of_error = str(e.__dict__['orig'])
-            if "violates unique constraint" in cause_of_error:
-                return send_error(409, "Bruv, A company is already registered using this email")
-            elif "not-null" in cause_of_error:
-                missing_fields = get_missing_fields(e.__dict__['params'])
-                return send_error(409, missing_fields=missing_fields)
-            else:
-                return jsonify({"status_code": 400, "message": cause_or_error}), 400
-    else:
-        return "Whuuuuh ? Just let man register", 200
+@app.route('/register', methods=['GET'])
+def load_register_page():
+    return "Whuuuuh ? Just let man register", 200
+
+@app.route("/register", methods=['POST'])
+def register_user():
+    form = request.get_json()
+    value = form.get
+    try:
+        new_company = Company(
+            value('email'),
+            hash_user_password(value('password')),
+            value('name'),
+            value('location'),
+            value('website'),
+            value('twitter'),
+            value('facebook'),
+            value('linkedin'),
+            value('bio')
+        )
+        db.session.add(new_company)
+        db.session.commit()
+        return jsonify(new_company.serialise()), 201
+    except IntegrityError as e:
+        cause_of_error = str(e.__dict__['orig'])
+        if "violates unique constraint" in cause_of_error:
+            return send_error(409, "Bruv, A company is already registered using this email")
+        elif "not-null" in cause_of_error:
+            missing_fields = get_missing_fields(e.__dict__['params'])
+            return send_error(409, missing_fields=missing_fields)
+        else:
+            return jsonify({"status_code": 400, "message": cause_or_error}), 400
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
