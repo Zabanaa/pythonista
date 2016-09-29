@@ -40,7 +40,8 @@ class TestCase(unittest.TestCase):
         return escape.json_decode(json_payload)
 
     def post(self, endpoint, payload):
-        response = self.app.post(endpoint, data=json.dumps(payload), content_type="application/json")
+        response = self.app.post(endpoint, data=json.dumps(payload), content_type="application/json",\
+                                 follow_redirects=True)
         return response
 
     # ========= Test methods ======== #
@@ -48,6 +49,13 @@ class TestCase(unittest.TestCase):
     def test_get_index_works(self):
         response = self.app.get('/', content_type="text/html")
         self.assertEqual(response.status_code, 200)
+        self.assertIn("please login", str(response.data))
+
+    def test_get_index_with_session(self):
+        # signup
+        # login
+        # with session
+        # check that the response contains hello company
 
     def test_get_register_works(self):
         response = self.app.get('/register', content_type="text/html")
@@ -82,10 +90,11 @@ class TestCase(unittest.TestCase):
     def test_login_errthang_fine(self):
         signup          = self.post('/register', self.numa)
         login_response  = self.post('/login', self.login_creds)
-        self.assertEqual(login_response.status_code, 200)
-        json_login_response = self.decode_json(login_response.data)
-        self.assertIn("you are logged in", json_login_response['message'])
-        self.assertEqual(json_login_response['status_code'], 200)
+
+        with self.app.session_transaction() as sess:
+            self.assertEqual(login_response.status_code, 200)
+            json_login_response = self.decode_json(login_response.data)
+            self.assertIn("hello %s" % sess['company'].lower(), json_login_response['message'])
 
     def test_login_incorrect_password(self):
         signup          = self.post('/register', self.numa)
