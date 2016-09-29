@@ -6,23 +6,29 @@ def hash_user_password(password):
         hashed_password = generate_password_hash(password)
         return hashed_password
 
-def send_error(status_code, message=None, missing_fields=None):
+def send_json(status_code, message=None, resource=None, missing_fields=None):
 
     if missing_fields is not None:
 
-        error = {
+        response = {
             'status_code': status_code,
             'message': "Incomplete request. Missing required fields".lower(),
             'missing_fields': missing_fields,
         }
 
+    elif resource is not None:
+        response = {
+            'status_code': status_code,
+            'message': "Resource successfully created".lower(),
+            'resource': resource
+        }
     else:
-        error = {
+        response = {
             'status_code': status_code,
             'message': message.lower()
         }
 
-    return jsonify(error), status_code
+    return jsonify(response), status_code
 
 def get_missing_fields(response_body):
     missing_fields = []
