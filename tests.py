@@ -1,25 +1,24 @@
-# Test file
 from tornado import escape
 import json
 import unittest
 from app import app, db
 from models import *
 
-numa = dict(
-    email="paris@numa.com",
-    password="numaparis",
-    name="Numa Paris",
-    location="Paris, France",
-    website="paris.numa.com",
-    twitter="numa_paris",
-    facebook="numaparis",
-    linkedin="numaparis",
-    bio="Startup hub in Paris"
-)
-
-numa_login_creds = dict(email="paris@numa.com", password="numaparis")
-
 class TestCase(unittest.TestCase):
+
+    numa = dict(
+        email="paris@numa.com",
+        password="numaparis",
+        name="Numa Paris",
+        location="Paris, France",
+        website="paris.numa.com",
+        twitter="numa_paris",
+        facebook="numaparis",
+        linkedin="numaparis",
+        bio="Startup hub in Paris"
+    )
+
+    numa_login_creds = dict(email="paris@numa.com", password="numaparis")
 
     def setUp(self):
         app.config.from_object('config.TestingConfig')
@@ -30,6 +29,16 @@ class TestCase(unittest.TestCase):
         db.session.remove()
         db.drop_all()
 
+    def register_user(self, json_payload):
+        response = self.app.post('/register', data=json.dumps(json_payload), content_type="application/json")
+        return response
+
+    def decode_json(self, json_payload):
+        return escape.json_decode(json_payload)
+
+    # ========= Test methods ======== #
+
+
     def test_get_index_works(self):
         response = self.app.get('/', content_type="text/html")
         self.assertEqual(response.status_code, 200)
@@ -39,27 +48,27 @@ class TestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_post_register_works(self):
-        response = self.app.post('/register', data=json.dumps(numa), content_type="application/json")
+        response = self.register_user(self.numa)
         self.assertEqual(response.status_code, 201)
 
     # test violate not null constraint on register page
     def test_register_missing_fields(self):
-        json_data = json.dumps( dict(
+        json_data = dict(
                 email="paris@numa.com",
                 location="Paris, France",
                 bio="hweoiriewjr"
-            )
         )
-        response = self.app.post('/register', data=json_data, content_type="application/json")
-        server_response = escape.json_decode(response.data)
+
+        response = self.register_user(numa_missing_fields)
+        server_response = self.decode_json(response.data)
         self.assertIn("Incomplete request. Missing required fields", server_response['message'])
         self.assertEqual(server_response['status_code'], 409)
 
     # test violate unique constraint on register page
     def test_register_username_taken(self):
-        response_one = self.app.post('/register', data=json.dumps(numa), content_type="application/json")
-        response_two = self.app.post('/register', data=json.dumps(numa), content_type="application/json")
-        server_response = escape.json_decode(response_two.data)
+        response_one = self.register_user(self.numa)
+        response_two = self.register_user(self.numa)
+        server_response = self.decode_json(response_two.data)
         self.assertIn("A company is already registered", server_response['message'])
         self.assertEqual(server_response['status_code'], 409)
 
@@ -70,23 +79,23 @@ class TestCase(unittest.TestCase):
 
     # test login errthang fine
     def test_login_errthang_fine(self):
-        signup          = self.app.post('/register', data=json.dumps(numa), content_type="application/json")
-        login_response  = self.app.post('/login', data=json.dumps(numa_login_creds), content_type="application/json")
+        signup          = self.register_user(self.numa)
+        login_response  = self.app.post('/login', data=json.dumps(self.numa_login_creds), content_type="application/json")
 
         self.assertEqual(login_response.status_code, 200)
-        json_login_response = escape.json_decode(login_response.data)
+        json_login_response = self.decode_json(login_response.data)
         self.assertIn("you are logged in", json_login_response['message'])
         self.assertEqual(json_login_response['status_code'], 200)
 
     # test login with wrong password
     def test_login_incorrect_password(self):
-        signup          = self.app.post('/register', data=json.dumps(numa), content_type="application/json")
+        signup          = self.register_user(self.numa) 
         login_response  = self.app.post('/login', data=json.dumps(dict(
             email="paris@numa.com",
             password="wrongpasswordbruv"
         )), content_type="application/json")
 
-        json_login_response = escape.json_decode(login_response.data)
+        json_login_response = self.decode_json(login_response.data)
         self.assertEqual(login_response.status_code, 401)
         self.assertEqual(401, json_login_response['status_code'])
         self.assertIn("Sorry, the password you provided is incorrect", json_login_response['message'])
