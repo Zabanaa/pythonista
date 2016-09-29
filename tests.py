@@ -52,10 +52,12 @@ class TestCase(unittest.TestCase):
         self.assertIn("please login", str(response.data))
 
     def test_get_index_with_session(self):
-        # signup
-        # login
-        # with session
-        # check that the response contains hello company
+        signup = self.post('/register', self.numa)
+        login = self.post('/login', self.login_creds)
+        response = self.app.get('/')
+        with self.app.session_transaction() as session:
+            self.assertEqual(response.status_code, 200)
+            self.assertIn("Hello %s, and welcome back home" % session['company'], str(response.data))
 
     def test_get_register_works(self):
         response = self.app.get('/register', content_type="text/html")
