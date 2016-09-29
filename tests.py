@@ -35,16 +35,8 @@ class TestCase(unittest.TestCase):
         db.session.remove()
         db.drop_all()
 
-    def register_user(self, json_payload):
-        response = self.app.post('/register', data=json.dumps(json_payload), content_type="application/json")
-        return response
-
     def decode_json(self, json_payload):
         return escape.json_decode(json_payload)
-
-    def login_user(self, json_payload):
-        response = self.app.post('/login', data=json.dumps(json_payload), content_type="application/json")
-        return response
 
     def post(self, endpoint, payload):
         response = self.app.post(endpoint, data=json.dumps(payload), content_type="application/json")
@@ -95,7 +87,6 @@ class TestCase(unittest.TestCase):
     def test_login_incorrect_password(self):
         signup          = self.post('/register', self.numa)
         login_response  = self.post('/login', self.login_wrongpw)
-
         json_login_response = self.decode_json(login_response.data)
         self.assertEqual(login_response.status_code, 401)
         self.assertEqual(401, json_login_response['status_code'])
