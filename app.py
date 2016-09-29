@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
-from helpers import send_error, get_missing_fields, hash_user_password
+from helpers import send_json, get_missing_fields, hash_user_password
 from tornado import escape
 from werkzeug.security import check_password_hash
 
@@ -39,16 +39,16 @@ def register_user():
         )
         db.session.add(new_company)
         db.session.commit()
-        return jsonify(new_company.serialise()), 201
+        return send_json(201, resource=new_company.serialise())
     except IntegrityError as e:
         cause_of_error = str(e.__dict__['orig'])
         if "violates unique constraint" in cause_of_error:
-            return send_error(409, "sorry, it seems like a company is already registered using this email")
+            return send_json(409, "sorry, it seems like a company is already registered using this email")
         elif "not-null" in cause_of_error:
             missing_fields = get_missing_fields(e.__dict__['params'])
-            return send_error(409, missing_fields=missing_fields)
+            return send_json(409, missing_fields=missing_fields)
         else:
-            return jsonify({"status_code": 400, "message": cause_or_error}), 400
+            return send_json(400, cause_or_error)
 
 @app.route('/login', methods=['GET'])
 def load_login_page():
@@ -65,9 +65,9 @@ def login():
     company = Company.query.filter_by(email=email).first()
 
     if check_password_hash(company.password, password) == True:
-        return jsonify({"message": "you are logged in", "status_code": 200}), 200
+        return send_json(200, "you are logged in")
     else:
-        return send_error(401, "Sorry, the password you provided is incorrect")
+        return send_json(401, "Sorry, the password you provided is incorrect")
 
     # if passwords match
             # set the session
@@ -77,7 +77,7 @@ def login():
         # else return a 401 unauthorised
         # with a message saying wrong password
 
-    return jsonify(login_credentials)
+    return send_json(200, login_credentials)
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
