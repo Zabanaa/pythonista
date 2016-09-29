@@ -101,7 +101,7 @@ class TestCase(unittest.TestCase):
         json_response = self.decode_json(login_response.data)
         self.assertEqual(login_response.status_code, 401)
         self.assertEqual(json_response['status_code'], 401)
-        self.assertIn("the company does not exist bruv whuh you doin ?", json_response['message'])
+        self.assertIn("sorry, there is no company registered at this address", json_response['message'])
 
     # test invalid JSON
 
