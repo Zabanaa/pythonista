@@ -23,7 +23,8 @@ class TestCase(unittest.TestCase):
         bio="Startup hub in Paris"
     )
 
-    numa_login_creds = dict(email="paris@numa.com", password="numaparis")
+    login_creds = dict(email="paris@numa.com", password="numaparis")
+    login_wrongpw = dict(email="paris@numa.com", password="wrongpwd")
 
     def setUp(self):
         app.config.from_object('config.TestingConfig')
@@ -41,6 +42,14 @@ class TestCase(unittest.TestCase):
     def decode_json(self, json_payload):
         return escape.json_decode(json_payload)
 
+    def login_user(self, json_payload):
+        response = self.app.post('/login', data=json.dumps(json_payload), content_type="application/json")
+        return response
+
+    def post(self, endpoint, payload):
+        response = self.app.post(endpoint, data=json.dumps(payload), content_type="application/json")
+        return response
+
     # ========= Test methods ======== #
 
     def test_get_index_works(self):
@@ -52,18 +61,19 @@ class TestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_post_register_works(self):
-        response = self.register_user(self.numa)
+        response = self.post('/register', self.numa)
         self.assertEqual(response.status_code, 201)
 
     def test_register_missing_fields(self):
-        response = self.register_user(self.numa_missing_fields)
+        response = self.post('/register', self.numa_missing_fields)
         server_response = self.decode_json(response.data)
         self.assertIn("Incomplete request. Missing required fields", server_response['message'])
+
         self.assertEqual(server_response['status_code'], 409)
 
     def test_register_username_taken(self):
-        response_one = self.register_user(self.numa)
-        response_two = self.register_user(self.numa)
+        response_one = self.post('/register', self.numa)
+        response_two = self.post('/register', self.numa)
         server_response = self.decode_json(response_two.data)
         self.assertIn("A company is already registered", server_response['message'])
         self.assertEqual(server_response['status_code'], 409)
@@ -74,19 +84,17 @@ class TestCase(unittest.TestCase):
         self.assertEqual(b"Bruv you want to login ?", response.data)
 
     def test_login_errthang_fine(self):
-        signup          = self.register_user(self.numa)
-        login_response  = self.app.post('/login', data=json.dumps(self.numa_login_creds), content_type="application/json")
+        signup          = self.post('/register', self.numa)
+        login_response  = self.post('/login', self.login_creds)
         self.assertEqual(login_response.status_code, 200)
         json_login_response = self.decode_json(login_response.data)
         self.assertIn("you are logged in", json_login_response['message'])
         self.assertEqual(json_login_response['status_code'], 200)
 
+
     def test_login_incorrect_password(self):
-        signup          = self.register_user(self.numa)
-        login_response  = self.app.post('/login', data=json.dumps(dict(
-            email="paris@numa.com",
-            password="wrongpasswordbruv"
-        )), content_type="application/json")
+        signup          = self.post('/register', self.numa)
+        login_response  = self.post('/login', self.login_wrongpw)
 
         json_login_response = self.decode_json(login_response.data)
         self.assertEqual(login_response.status_code, 401)
