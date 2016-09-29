@@ -15,7 +15,10 @@ from models import *
 
 @app.route('/')
 def index():
-    return "Hello and welcome to pythonista.io", 200
+    if 'company' in session:
+        return "Hello %s, and welcome back home" % session['company']
+    else:
+        return "Hello and welcome to pythonista.io, please login", 200
 
 @app.route('/register', methods=['GET'])
 def load_register_page():
@@ -64,22 +67,11 @@ def login():
     password = value('password')
     company = Company.query.filter_by(email=email).first()
 
-    # Check if the email corresponds to a company in the db
-        # if so,
-            # check the password they provided with the password hash related to that company
-            # if they match
-                # they get a 200 ok
-                # and a redirection url to use on the front end
-                # also, we set the session for that user
-            #else
-                # return a 401 with a message about the passwd
-    # else
-        # we return a 401 unauthorised because the password they provided did not match the hash in the db
-
     if company is not None:
         if check_password_hash(company.password, password) == True:
-            session['company'] = email
-            return send_json(200, "you are logged in") # send a redirection url along with the message
+            session['company'] = company.name
+            welcome_message = "Hello %s, welcome back" % session['company']
+            return send_json(200, welcome_message) # Add redirect url
         else:
             return send_json(401, "Sorry, the password you provided is incorrect")
     else:
