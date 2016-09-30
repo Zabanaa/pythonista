@@ -111,6 +111,13 @@ class TestCase(unittest.TestCase):
         self.assertEqual(json_response['status_code'], 401)
         self.assertIn("Sorry, there is no company registered at this address", json_response['message'])
 
+    def test_logout(self):
+        signup  = self.post('/register', self.numa)
+        login   = self.post('/login', self.login_creds)
+        logout  = self.app.get('/logout', follow_redirects=True)
+        with self.app.session_transaction() as session:
+            self.assertNotIn('company', session)
+            self.assertIn('please login', str(logout.data))
     # test invalid JSON
 
 if __name__ == "__main__":
