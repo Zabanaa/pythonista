@@ -70,7 +70,7 @@ class TestCase(unittest.TestCase):
     def test_register_missing_fields(self):
         response = self.post('/register', self.numa_missing_fields)
         server_response = self.decode_json(response.data)
-        self.assertIn("Incomplete request. Missing required fields".lower(), server_response['message'])
+        self.assertIn("Incomplete request. Missing required fields.", server_response['message'])
 
         self.assertEqual(server_response['status_code'], 409)
 
@@ -93,7 +93,7 @@ class TestCase(unittest.TestCase):
         with self.app.session_transaction() as sess:
             self.assertEqual(login_response.status_code, 200)
             json_login_response = self.decode_json(login_response.data)
-            self.assertIn("hello %s" % sess['company'].lower(), json_login_response['message'])
+            self.assertIn("Hello %s" % sess['company'], json_login_response['message'])
 
     def test_login_incorrect_password(self):
         signup          = self.post('/register', self.numa)
@@ -101,7 +101,7 @@ class TestCase(unittest.TestCase):
         json_login_response = self.decode_json(login_response.data)
         self.assertEqual(login_response.status_code, 401)
         self.assertEqual(401, json_login_response['status_code'])
-        self.assertIn("Sorry, the password you provided is incorrect".lower(), json_login_response['message'])
+        self.assertIn("Sorry, the password you provided is incorrect", json_login_response['message'])
 
     def test_login_incorrect_username(self):
         signup = self.post('/register', self.numa)
@@ -109,7 +109,7 @@ class TestCase(unittest.TestCase):
         json_response = self.decode_json(login_response.data)
         self.assertEqual(login_response.status_code, 401)
         self.assertEqual(json_response['status_code'], 401)
-        self.assertIn("sorry, there is no company registered at this address", json_response['message'])
+        self.assertIn("Sorry, there is no company registered at this address", json_response['message'])
 
     # test invalid JSON
 
