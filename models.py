@@ -12,17 +12,9 @@ class Company(db.Model):
     linkedin    = db.Column(db.String(180), nullable=True)
     bio         = db.Column(db.Text(), nullable=True)
 
-    def __init__(self, email, password, name, location, website, twitter, facebook, linkedin, bio):
-#        self.id = self.query.order_by("id desc").first().id + 1
-        self.email      = email
-        self.password   = password
-        self.name       = name
-        self.location   = location
-        self.website    = website
-        self.twitter    = twitter
-        self.facebook   = facebook
-        self.linkedin   = linkedin
-        self.bio        = bio
+    def __init__(self, dictionary):
+        for key, value in dictionary.items():
+            setattr(self, key, value)
 
     def serialise(self):
         return {
