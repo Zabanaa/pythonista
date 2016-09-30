@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify, session
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
-from helpers import send_json, get_missing_fields, hash_user_password
 from tornado import escape
 from werkzeug.security import check_password_hash
 
@@ -11,6 +10,7 @@ app.config.from_object('config.DevelopmentConfig')
 
 db = SQLAlchemy(app)
 from models import *
+from helpers import send_json, get_missing_fields, hash_user_password, register_company
 
 
 @app.route('/')
@@ -27,21 +27,8 @@ def load_register_page():
 @app.route("/register", methods=['POST'])
 def register_user():
     form = request.get_json()
-    value = form.get
     try:
-        new_company = Company(
-            value('email'),
-            hash_user_password(value('password')),
-            value('name'),
-            value('location'),
-            value('website'),
-            value('twitter'),
-            value('facebook'),
-            value('linkedin'),
-            value('bio')
-        )
-        db.session.add(new_company)
-        db.session.commit()
+        new_company = register_company(form)
         return send_json(201, resource=new_company.serialise())
     except IntegrityError as e:
         cause_of_error = str(e.__dict__['orig'])
