@@ -59,18 +59,15 @@ def register_user():
 def load_login_page():
     return "Hello, please submit your credentials to log in", 200
 
-
 @app.route('/login', methods=["POST"])
 def login():
 
-    login_credentials = request.get_json()
-    value = login_credentials.get
-    email = value('email')
-    password = value('password')
-    company = Company.query.filter_by(email=email).first()
+    form = request.get_json()
+    login_creds = (form['email'], form['password'])
+    company = Company.query.filter_by(email=login_creds[0]).first()
 
     if company is not None:
-        if check_password_hash(company.password, password) == True:
+        if check_password_hash(company.password, login_creds[1]) == True:
             session['company'] = company.name
             return send_response(200, {
                 "status_code": 200,
