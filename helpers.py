@@ -30,34 +30,8 @@ def register_company(company_obj):
     return new_company
 
 
-def send_json(status_code, message=None, resource=None, missing_fields=None):
-
-    '''
-        Takes a dictionary containing the response object to return to the user
-        in json format
-    '''
-
-    if missing_fields is not None:
-
-        response = {
-            'status_code': status_code,
-            'message': "Incomplete request. Missing required fields".lower(),
-            'missing_fields': missing_fields,
-        }
-
-    elif resource is not None:
-        response = {
-            'status_code': status_code,
-            'message': "Resource successfully created".lower(),
-            'resource': resource
-        }
-    else:
-        response = {
-            'status_code': status_code,
-            'message': message.lower()
-        }
-
-    return jsonify(response), status_code
+def send_response(status_code, response_object):
+    return jsonify(response_object), status_code
 
 def get_missing_fields(response_body):
 
