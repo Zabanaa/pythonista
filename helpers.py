@@ -11,6 +11,22 @@ def hash_user_password(password):
         hashed_password = generate_password_hash(password)
         return hashed_password
 
+def register_company(company_obj):
+
+    '''
+    Accepts a request dictionary and saves it as a Company 
+    instance in the database
+    '''
+
+    if 'password' in company_obj:
+        company_obj['password'] = hash_user_password(company_obj['password'])
+
+    new_company = Company(company_obj)
+    db.session.add(new_company)
+    db.session.commit()
+
+
+
 def send_json(status_code, message=None, resource=None, missing_fields=None):
 
     '''
