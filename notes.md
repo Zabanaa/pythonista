@@ -54,7 +54,7 @@ MODELS
     - tags
     - description
     - salary_range
-    - type
+    - type (ft, pt, etc) 
     - company_id (Foreign Key)
     - user_id (Foreign Key)
 
