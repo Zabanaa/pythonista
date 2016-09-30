@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify, session, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
 from tornado import escape
@@ -84,6 +84,11 @@ def login():
             "status_code": 401,
             "message": "Sorry, there is no company registered at this address"
         })
+
+@app.route('/logout', methods=['GET'])
+def logout_user():
+    session.clear()
+    return redirect(url_for('index'))
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
