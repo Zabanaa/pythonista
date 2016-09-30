@@ -1,4 +1,6 @@
 from flask import jsonify
+from app import db
+from models import Company
 from werkzeug.security import generate_password_hash
 
 def hash_user_password(password):
@@ -25,6 +27,7 @@ def register_company(company_obj):
     db.session.add(new_company)
     db.session.commit()
 
+    return new_company
 
 
 def send_json(status_code, message=None, resource=None, missing_fields=None):
