@@ -1,7 +1,7 @@
 from tornado import escape
 import json
 import unittest
-from app import app, db
+from app import *
 from models import *
 from flask import request
 
