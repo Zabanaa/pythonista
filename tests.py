@@ -3,29 +3,26 @@ import json
 import unittest
 from app import app, db
 from models import *
+from flask import request
 
 class TestCase(unittest.TestCase):
 
-    numa = dict(
-        email="paris@numa.com",
-        password="numaparis",
-        name="Numa Paris",
-        location="Paris, France",
-        website="paris.numa.com",
-        twitter="numa_paris",
-        facebook="numaparis",
-        linkedin="numaparis",
-        bio="Startup hub in Paris"
-    )
+    numa = {
+        "email":"paris@numa.com",
+        "password":"numaparis",
+        "name":"Numa Paris",
+        "location":"Paris, France",
+        "website":"paris.numa.com",
+        "twitter":"numa_paris",
+        "facebook":"numaparis",
+        "linkedin":"numaparis",
+        "bio":"Startup hub in Paris"
+    }
 
-    numa_missing_fields = dict(
-        name="Numa Paris",
-        bio="Startup hub in Paris"
-    )
-
-    login_creds = dict(email="paris@numa.com", password="numaparis")
-    login_wrongpw = dict(email="paris@numa.com", password="wrongpwd")
-    login_wrong_user = dict(email="xsdsdsjwparis@numa.com", password="wrongpwd")
+    numa_missing_fields = {"name": numa['name'], "bio": numa['bio']}
+    login_creds = {"email": numa['email'], "password": numa['password']}
+    login_wrongpw = {"email": numa['email'], "password": "kehwleq"}
+    login_wrong_user = {"email": "dskjdksjdksjds", "password": "kehwleq"}
 
     def setUp(self):
         app.config.from_object('config.TestingConfig')
