@@ -11,6 +11,8 @@ class Company(db.Model):
     facebook    = db.Column(db.String(120), nullable=True)
     linkedin    = db.Column(db.String(180), nullable=True)
     bio         = db.Column(db.Text(), nullable=True)
+    total_staff = db.Column(db.Integer, nullable=True)
+    # total_jobs = query the db for jobs where company_id is self.id
 
     def __init__(self, dictionary):
         for key, value in dictionary.items():
