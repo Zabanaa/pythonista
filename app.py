@@ -72,7 +72,7 @@ def login():
             return send_response(200, {
                 "status_code": 200,
                 "message": "Hello %s, welcome back" % session['company'],
-                "redirect_url": "/"
+                "redirect_to": "/"
             })
         else:
             return send_response(401, {
@@ -88,7 +88,11 @@ def login():
 @app.route('/logout', methods=['GET'])
 def logout_user():
     session.clear()
-    return redirect(url_for('index'))
+    return send_response(200, {
+        "status_code": 200,
+        "message": "You are now logged out",
+        "redirect_to": url_for("index") 
+    })
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
