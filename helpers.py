@@ -3,6 +3,13 @@ from app import db
 from models import Company
 from werkzeug.security import generate_password_hash
 
+# Login required decorator
+
+# check if company is in the session
+# check that the session value is equal to the actual company name
+# if so execute the function
+# else return a 403 unauthorised and redirect the user
+
 def hash_user_password(password):
 
     '''
