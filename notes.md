@@ -30,11 +30,16 @@ How to handle the updating of users profiles
 
 API
 ------------------------------
-/api/jobs/                               GET x POST
-/api/jobs/id/                            GET x PUT x DELETE
-/api/companies/                          GET x POST
-/api/companies/id/                       GET x PUT
-/api/companies/id/jobs/                  GET 
+GET    /api/jobs/                     
+POST   /api/jobs/                          Protected
+GET    /api/jobs/id/                       
+POST   /api/jobs/id/                       Protected  
+DELETE /api/jobs/id/                       Protected 
+GET    /api/companies/                          
+POST   /api/companies/                     Protected
+GET    /api/companies/id/                       
+PUT    /api/companies/id/                  Protected      
+GET    /api/companies/id/jobs/             
 
 
 MODELS
