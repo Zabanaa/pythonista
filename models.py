@@ -1,4 +1,5 @@
 from app import db
+from sqlalchemy_utils.types.choice import ChoiceType
 
 class Company(db.Model):
     id          = db.Column(db.Integer, primary_key=True)
@@ -10,7 +11,10 @@ class Company(db.Model):
     twitter     = db.Column(db.String(60), nullable=True)
     facebook    = db.Column(db.String(120), nullable=True)
     linkedin    = db.Column(db.String(180), nullable=True)
+    instagram   = db.Column(db.String(120), nullable=True)
     bio         = db.Column(db.Text(), nullable=True)
+    total_staff = db.Column(db.Integer, nullable=True)
+    total_jobs  = db.relationship('Job', backref='company', lazy='dynamic')
 
     def __init__(self, dictionary):
         for key, value in dictionary.items():
@@ -31,3 +35,44 @@ class Company(db.Model):
 
     def __repr__(self):
         return "Company %s" % (self.name)
+
+class Job(db.Model):
+
+    CONTRACTS = [
+        ('full_time', 'Full Time'),
+        ('part_time', 'Part Time'),
+        ('contract',  'Contract'),
+        ('internship', 'Internship'),
+        ('remote', 'Remote')
+    ]
+
+    id                  = db.Column(db.Integer, primary_key=True)
+    tags                = db.Column(db.String(255), nullable=False)
+    title               = db.Column(db.String(70), nullable=False)
+    description         = db.Column(db.Text(), nullable=False)
+    salary_range        = db.Column(db.String(60), nullable=True)
+    contract_type       = db.Column(ChoiceType(CONTRACTS), nullable=False)
+    company_id          = db.Column(db.Integer, db.ForeignKey('company.id'))
+
+    def __init__(self, **properties):
+        for key, value in properties.items():
+            setattr(self, key, value)
+
+    def serialise(self):
+        return {
+            "id"        : self.id,
+            "tags"      : self.tags,
+            "title"     : self.title,
+            "description"   : self.description,
+            "salary_range"  : self.salary_range,
+            "contract_type" : self.contract_type,
+            "company_id"    : self.company_id
+        }
+
+    def __repr__(self):
+        return self.title
+
+
+
+
+

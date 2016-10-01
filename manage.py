@@ -1,7 +1,7 @@
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 from app import app, db
-from models import Company
+from models import Company, Job
 
 migrate = Migrate(app, db, compare_type=True)
 
