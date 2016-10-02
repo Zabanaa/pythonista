@@ -65,7 +65,7 @@ def login():
     form = request.get_json()
     login_creds = (form['email'], form['password'])
     company = Company.query.filter_by(email=login_creds[0]).first()
-
+    # login_user(company)
     if company is not None:
         if check_password_hash(company.password, login_creds[1]) == True:
             session['company'] = company.name
@@ -96,7 +96,7 @@ def logout_user():
 
 # get company (accepts company_id as a parameter)
 # get_job_by_id (accepts job_id as a parameter)
-
+# get_company_jobs (accepts company_id as a parameter and queries the db to get all the jobs related to that company)
 
 
 
