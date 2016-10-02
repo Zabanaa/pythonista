@@ -22,6 +22,9 @@ class Company(db.Model):
         for key, value in dictionary.items():
             setattr(self, key, value)
 
+    def get_url(self):
+        return url_for('app.get_company', company_id=self.id, _external=True)
+
     def verify_password(self, password):
         return check_password_hash(self.password, password)
 
