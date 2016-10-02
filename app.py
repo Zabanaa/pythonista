@@ -94,5 +94,11 @@ def logout_user():
         "redirect_to": url_for("index") 
     })
 
+# get company (accepts company_id as a parameter)
+# get_job_by_id (accepts job_id as a parameter)
+
+
+
+
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
