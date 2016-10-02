@@ -1,5 +1,7 @@
 from app import db
+from flask import url_for
 from sqlalchemy_utils.types.choice import ChoiceType
+from werkzeug.security import check_password_hash
 
 class Company(db.Model):
     id          = db.Column(db.Integer, primary_key=True)
@@ -20,17 +22,20 @@ class Company(db.Model):
         for key, value in dictionary.items():
             setattr(self, key, value)
 
+    def verify_password(self, password):
+        return check_password_hash(self.password, password)
+
     def serialise(self):
         return {
             "id"        : self.id,
+            "bio"       : self.bio,
             "email"     : self.email,
             "name"      : self.name,
             "location"  : self.location,
             "website"   : self.website,
             "twitter"   : self.twitter,
             "facebook"  : self.facebook,
-            "linkedin"  : self.linkedin,
-            "bio"       : self.bio
+            "linkedin"  : self.linkedin
         }
 
     def __repr__(self):
