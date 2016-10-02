@@ -25,6 +25,9 @@ class Company(db.Model):
     def get_url(self):
         return url_for('app.get_company', company_id=self.id, _external=True)
 
+    def get_jobs(self):
+        return url_for('app.get_company_jobs', company_id=self.id, _external=True)
+
     def verify_password(self, password):
         return check_password_hash(self.password, password)
 
@@ -38,7 +41,8 @@ class Company(db.Model):
             "website"   : self.website,
             "twitter"   : self.twitter,
             "facebook"  : self.facebook,
-            "linkedin"  : self.linkedin
+            "linkedin"  : self.linkedin,
+            "jobs"      : self.get_jobs()
         }
 
     def __repr__(self):
