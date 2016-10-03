@@ -3,10 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
 from tornado import escape
 from werkzeug.security import check_password_hash
+from decorators import serialise_json
 
 app = Flask(__name__)
 app.config.from_object('config.DevelopmentConfig')
-
 
 db = SQLAlchemy(app)
 from models import *
@@ -30,18 +30,17 @@ def register_user():
     form = request.get_json()
     try:
         new_company = register_company(form)
+        return send_response(201, {"status_code": 201, "company": new_company.serialise()})
 
     except IntegrityError as e:
         cause_of_error = str(e.__dict__['orig'])
         if "violates unique constraint" in cause_of_error:
-            email_already_registered()
+            return email_already_registered()
         elif "not-null" in cause_of_error:
             missing_fields = get_missing_fields(e.__dict__['params'])
-            incomplete_request(missing_fields=missing_fields)
+            return incomplete_request(missing_fields=missing_fields)
         else:
-            bad_request()
-
-    return send_response(201, {"status_code": 201, "company": new_company.serialise()})
+            return bad_request()
 
 @app.route('/login', methods=['GET'])
 def load_login_page():
@@ -63,15 +62,9 @@ def login():
                 "redirect_to": "/"
             })
         else:
-            return send_response(401, {
-                "status_code": 401,
-                "message":"Sorry, the password you provided is incorrect"
-            })
+            wrong_password()
     else:
-        return send_response(401, {
-            "status_code": 401,
-            "message": "Sorry, there is no company registered at this address"
-        })
+        wrong_email()
 
 @app.route('/logout', methods=['GET'])
 def logout_user():
