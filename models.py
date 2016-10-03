@@ -1,7 +1,7 @@
 from app import db
 from flask import url_for
 from sqlalchemy_utils.types.choice import ChoiceType
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 
 class Company(db.Model):
     id          = db.Column(db.Integer, primary_key=True)
@@ -20,13 +20,18 @@ class Company(db.Model):
 
     def __init__(self, dictionary):
         for key, value in dictionary.items():
+            if key == 'password':
+                value = self.hash_password(value)
             setattr(self, key, value)
 
-    def get_url(self):
-        return url_for('app.get_company', company_id=self.id, _external=True)
+    #def get_url(self):
+    #    return url_for('app.get_company', company_id=self.id, _external=True)
 
-    def get_jobs(self):
-        return url_for('app.get_company_jobs', company_id=self.id, _external=True)
+    #def get_jobs(self):
+    #    return url_for('app.get_company_jobs', company_id=self.id, _external=True)
+
+    def hash_password(self, password):
+        return generate_password_hash(password)
 
     def verify_password(self, password):
         return check_password_hash(self.password, password)
@@ -41,8 +46,8 @@ class Company(db.Model):
             "website"   : self.website,
             "twitter"   : self.twitter,
             "facebook"  : self.facebook,
-            "linkedin"  : self.linkedin,
-            "jobs"      : self.get_jobs()
+            "linkedin"  : self.linkedin
+    #        "jobs"      : self.get_jobs()
         }
 
     def __repr__(self):
