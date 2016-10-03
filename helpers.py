@@ -1,7 +1,6 @@
 from flask import jsonify
 from app import db
 from models import Company
-from werkzeug.security import generate_password_hash
 
 # Login required decorator
 
@@ -35,16 +34,6 @@ def bad_request(reason=None):
     response = jsonify({"error": "Something went wrong", "status_code": 400, "reason": reason})
     response.status_code = 400
     return response
-
-def hash_user_password(password):
-
-    '''
-        Takes a plain text password and encrypts it
-    '''
-
-    if password is not None:
-        hashed_password = generate_password_hash(password)
-        return hashed_password
 
 def register_company(company_obj):
 
