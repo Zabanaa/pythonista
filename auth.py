@@ -15,7 +15,7 @@ def register_company(payload):
                 "status_code": 201,
                 "resource": new_company.serialise()
         })
-        # return the resources url in the location response header
+    # return the resources url in the location response header ('location' = newcompany.get_url)
     except IntegrityError as e:
         cause_of_error = str(e.__dict__['orig'])
         if "violates unique constraint" in cause_of_error:
@@ -41,6 +41,7 @@ def login_company(payload):
                 "redirect_to": "/"
             })
             # add redirect to location header
+            # return 302
         else:
             return wrong_password()
     else:
