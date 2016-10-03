@@ -10,7 +10,8 @@ app.config.from_object('config.DevelopmentConfig')
 
 db = SQLAlchemy(app)
 from models import *
-from helpers import get_missing_fields, hash_user_password, register_company, send_response
+from helpers import get_missing_fields, register_company, send_response, wrong_email, email_already_registered,\
+incomplete_request, bad_request, wrong_password
 
 
 @app.route('/')
@@ -29,31 +30,18 @@ def register_user():
     form = request.get_json()
     try:
         new_company = register_company(form)
-        return send_response(201, {
-            "status_code" : 201,
-            "resource": new_company.serialise()
-        })
+
     except IntegrityError as e:
         cause_of_error = str(e.__dict__['orig'])
         if "violates unique constraint" in cause_of_error:
-            return send_response(409,{
-                "status_code": 409,
-                "message": "sorry, it seems like a company is already registered using this\
-                email"
-            })
-
+            email_already_registered()
         elif "not-null" in cause_of_error:
             missing_fields = get_missing_fields(e.__dict__['params'])
-            return send_response(409, {
-                "status_code": 409,
-                "message" : "Incomplete request. Missing required fields.",
-                "missing_fields" : missing_fields
-            })
+            incomplete_request(missing_fields=missing_fields)
         else:
-            return send_response(400, {
-                "status_code": 400,
-                "message": cause_of_error
-            })
+            bad_request()
+
+    return send_response(201, {"status_code": 201, "company": new_company.serialise()})
 
 @app.route('/login', methods=['GET'])
 def load_login_page():
