@@ -11,21 +11,30 @@ from werkzeug.security import generate_password_hash
 # else return a 403 unauthorised and redirect the user
 
 def wrong_password():
-    return jsonify({"error": "The password you provided is incorrect", "status_code": 401})
+    response = jsonify({"error": "The password you provided is incorrect", "status_code": 401})
+    response.status_code = 401
+    return response
 
 def email_already_registered():
-    return jsonify({"error": "A company is already registered using this email", "status_code": 409})
+    response = jsonify({"error": "A company is already registered using this email", "status_code": 409})
+    response.status_code = 409
+    return response
 
 def wrong_email():
-    return jsonify({"error": "No company is registered using this email address", "status_code": 401})
+    response = jsonify({"error": "No company is registered using this email address", "status_code": 401})
+    response.status_code = 401
+    return response
 
 def incomplete_request(missing_fields=None):
-    return jsonify({"error": "Incomplete request, missing required fields", "status_code": 409,\
+    response = jsonify({"error": "Incomplete request, missing required fields", "status_code": 409,\
                     "missing_fields": missing_fields})
+    response.status_code = 409
+    return response
 
 def bad_request(reason=None):
-    return jsonify({"error": "Something went wrong", "status_code": 400, "reason": reason})
-
+    response = jsonify({"error": "Something went wrong", "status_code": 400, "reason": reason})
+    response.status_code = 400
+    return response
 
 def hash_user_password(password):
 
