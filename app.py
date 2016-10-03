@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, session
 from flask_sqlalchemy import SQLAlchemy
 from decorators import serialise_json
 
@@ -6,7 +6,7 @@ app = Flask(__name__)
 app.config.from_object('config.DevelopmentConfig')
 
 db = SQLAlchemy(app)
-from models import *
+from models import Company, Job
 from auth import login_company, logout_company, register_company
 
 
