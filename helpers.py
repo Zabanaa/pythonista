@@ -2,13 +2,6 @@ from flask import jsonify
 from app import db
 from models import Company
 
-# Login required decorator
-
-# check if company is in the session
-# check that the session value is equal to the actual company name
-# if so execute the function
-# else return a 403 unauthorised and redirect the user
-
 def wrong_password():
     response = jsonify({"error": "The password you provided is incorrect", "status_code": 401})
     response.status_code = 401
@@ -41,13 +34,11 @@ def register_company(company_obj):
     Accepts a request dictionary and saves it as a Company 
     instance in the database
     '''
-
     new_company = Company(company_obj)
     db.session.add(new_company)
     db.session.commit()
 
     return new_company
-
 
 def send_response(status_code, response_object):
     return jsonify(response_object), status_code
