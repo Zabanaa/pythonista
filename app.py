@@ -13,7 +13,7 @@ from auth import login_company, logout_company, register_company
 @app.route('/')
 def index():
     if 'company' in session:
-        return "Hello %s, and welcome back home" % session['company']
+        return "Hello %s, and welcome back home" % session['company'], 200
     else:
         return "Hello and welcome to pythonista.io, please login", 200
 
@@ -32,11 +32,13 @@ def load_login_page():
     return "Hello, please submit your credentials to log in", 200
 
 @app.route('/login', methods=["POST"])
+@serialise_json
 def login():
     form = request.get_json()
     return login_company(form)
 
 @app.route('/logout', methods=['GET'])
+@serialise_json
 def logout():
     return logout_company()
 
