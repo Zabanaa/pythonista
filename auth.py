@@ -37,7 +37,7 @@ def login_company(payload):
             session['company'] = company.email
             return send_response(200, {
                 "status_code": 200,
-                "message": "Hello %s, welcome back" % company.name,
+                "message": "Hello %s, welcome back" % company.email,
                 "redirect_to": "/"
             })
             # add redirect to location header
