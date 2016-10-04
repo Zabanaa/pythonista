@@ -18,18 +18,6 @@ def incomplete_request(missing_fields=None):
 def bad_request(reason=None):
     return 400, {"error": "Something went wrong", "status_code": 400, "reason": reason}), {}
 
-def register_company(company_obj):
-
-    '''
-    Accepts a request dictionary and saves it as a Company 
-    instance in the database
-    '''
-    new_company = Company(company_obj)
-    db.session.add(new_company)
-    db.session.commit()
-
-    return new_company
-
 def send_response(status_code, response_object):
     return jsonify(response_object), status_code
 
