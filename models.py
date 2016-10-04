@@ -24,8 +24,8 @@ class Company(db.Model):
                 value = self.hash_password(value)
             setattr(self, key, value)
 
-    #def get_url(self):
-    #    return url_for('app.get_company', company_id=self.id, _external=True)
+    def get_url(self):
+        return url_for('app.get_company', company_id=self.id, _external=True)
 
     #def get_jobs(self):
     #    return url_for('app.get_company_jobs', company_id=self.id, _external=True)
