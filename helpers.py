@@ -16,7 +16,7 @@ def incomplete_request(missing_fields=None):
                     "missing_fields": missing_fields}, {}
 
 def bad_request(reason=None):
-    return 400, {"error": "Something went wrong", "status_code": 400, "reason": reason}), {}
+    return 400, {"error": "Something went wrong", "status_code": 400, "reason": reason}, {}
 
 def send_response(status_code, response_object):
     return jsonify(response_object), status_code
