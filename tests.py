@@ -65,7 +65,7 @@ class TestCase(unittest.TestCase):
         response        = self.post('/register', self.numa)
         json_response   = self.decode_json(response.data)
         self.assertEqual(response.status_code, 201)
-        self.assertIn('resource', json_response)
+        self.assertIn('message', json_response)
 
     def test_register_missing_fields(self):
         response        = self.post('/register', self.numa_missing_fields)
@@ -91,9 +91,8 @@ class TestCase(unittest.TestCase):
         login_response  = self.post('/login', self.login_creds)
 
         with self.app.session_transaction() as sess:
-            self.assertEqual(login_response.status_code, 200)
-            json_login_response = self.decode_json(login_response.data)
-            self.assertIn("Hello %s" % sess['company'], json_login_response['message'])
+            self.assertEqual(self.numa['email'], sess['company'])
+            self.assertIn(sess['company'], str(login_response.data))
 
     def test_login_incorrect_password(self):
         signup              = self.post('/register', self.numa)
@@ -115,10 +114,9 @@ class TestCase(unittest.TestCase):
         signup          = self.post('/register', self.numa)
         login           = self.post('/login', self.login_creds)
         logout          = self.app.get('/logout', follow_redirects=True)
-        json_response   = self.decode_json(logout.data)
         with self.app.session_transaction() as session:
             self.assertNotIn('company', session)
-            self.assertIn('You have been logged out', json_response['message'])
+            self.assertIn('please login', str(logout.data)) 
 
 if __name__ == "__main__":
     unittest.main()
