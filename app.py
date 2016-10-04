@@ -22,6 +22,7 @@ def load_register_page():
     return "Plase fill out the form to register an account for your company", 200
 
 @app.route("/register", methods=['POST'])
+@serialise_json
 def register_user():
     form = request.get_json()
     return register_company(form)
