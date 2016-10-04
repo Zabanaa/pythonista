@@ -13,7 +13,7 @@ def wrong_email():
 
 def incomplete_request(missing_fields=None):
     return 409, {"error": "Incomplete request, Missing required fields.", "status_code": 409,\
-                    "missing_fields": missing_fields}), {}
+                    "missing_fields": missing_fields}, {}
 
 def bad_request(reason=None):
     return 400, {"error": "Something went wrong", "status_code": 400, "reason": reason}), {}
