@@ -70,7 +70,7 @@ class TestCase(unittest.TestCase):
     def test_register_missing_fields(self):
         response        = self.post('/register', self.numa_missing_fields)
         server_response = self.decode_json(response.data)
-        self.assertIn("Incomplete request. Missing required fields.", server_response['message'])
+        self.assertIn("Incomplete request, Missing required fields.", server_response['error'])
 
         self.assertEqual(server_response['status_code'], 409)
 
@@ -78,7 +78,7 @@ class TestCase(unittest.TestCase):
         response_one    = self.post('/register', self.numa)
         response_two    = self.post('/register', self.numa)
         server_response = self.decode_json(response_two.data)
-        self.assertIn("A company is already registered".lower(), server_response['message'])
+        self.assertIn("A company is already registered using this email", server_response['error'])
         self.assertEqual(server_response['status_code'], 409)
 
     def test_login_page_loads(self):
@@ -101,7 +101,7 @@ class TestCase(unittest.TestCase):
         json_login_response = self.decode_json(login_response.data)
         self.assertEqual(login_response.status_code, 401)
         self.assertEqual(401, json_login_response['status_code'])
-        self.assertIn("Sorry, the password you provided is incorrect", json_login_response['message'])
+        self.assertIn("The password you provided is incorrect", json_login_response['error'])
 
     def test_login_incorrect_username(self):
         signup          = self.post('/register', self.numa)
@@ -109,7 +109,7 @@ class TestCase(unittest.TestCase):
         json_response   = self.decode_json(login_response.data)
         self.assertEqual(login_response.status_code, 401)
         self.assertEqual(json_response['status_code'], 401)
-        self.assertIn("Sorry, there is no company registered at this address", json_response['message'])
+        self.assertIn("No company is registered using this email address", json_response['error'])
 
     def test_logout(self):
         signup          = self.post('/register', self.numa)
@@ -118,7 +118,7 @@ class TestCase(unittest.TestCase):
         json_response   = self.decode_json(logout.data)
         with self.app.session_transaction() as session:
             self.assertNotIn('company', session)
-            self.assertIn('You are now logged out', json_response['message'])
+            self.assertIn('You have been logged out', json_response['message'])
 
 if __name__ == "__main__":
     unittest.main()
