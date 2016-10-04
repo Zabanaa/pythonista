@@ -3,30 +3,20 @@ from app import db
 from models import Company
 
 def wrong_password():
-    response = jsonify({"error": "The password you provided is incorrect", "status_code": 401})
-    response.status_code = 401
-    return response
+    return 401, {"error": "The password you provided is incorrect", "status_code": 401}, {}
 
 def email_already_registered():
-    response = jsonify({"error": "A company is already registered using this email", "status_code": 409})
-    response.status_code = 409
-    return response
+    return 409, {"error": "A company is already registered using this email", "status_code": 409}, {}
 
 def wrong_email():
-    response = jsonify({"error": "No company is registered using this email address", "status_code": 401})
-    response.status_code = 401
-    return response
+    return 401, {"error": "No company is registered using this email address", "status_code": 401}, {}
 
 def incomplete_request(missing_fields=None):
-    response = jsonify({"error": "Incomplete request, Missing required fields.", "status_code": 409,\
-                    "missing_fields": missing_fields})
-    response.status_code = 409
-    return response
+    return 409, {"error": "Incomplete request, Missing required fields.", "status_code": 409,\
+                    "missing_fields": missing_fields}), {}
 
 def bad_request(reason=None):
-    response = jsonify({"error": "Something went wrong", "status_code": 400, "reason": reason})
-    response.status_code = 400
-    return response
+    return 400, {"error": "Something went wrong", "status_code": 400, "reason": reason}), {}
 
 def register_company(company_obj):
 
