@@ -23,7 +23,6 @@ def register_company(payload):
         else:
             return bad_request()
 
-# decorate with serialise_json to avoid having to return send_response
 def login_company(payload):
 
     email, password = (payload['email'], payload['password'])
@@ -32,23 +31,12 @@ def login_company(payload):
     if company is not None:
         if company.verify_password(password) == True:
             session['company'] = company.email
-            return send_response(200, {
-                "status_code": 200,
-                "message": "Hello %s, welcome back" % company.email,
-                "redirect_to": "/"
-            })
-            # add redirect to location header
-            # return 302
+            return 302, {"message": "Login successful"}, {"Location": "/"}
         else:
             return wrong_password()
     else:
         return wrong_email()
 
-# decorate with serialise_json to avoid having to return send_response
 def logout_company():
     session.clear()
-    # add redirect url to location header
-    return send_response(200, {"status_code": 302,
-                               "message": "You have been logged out", 
-                               "redirect_to": "/"
-                               })
+    return 302, {"message": "You have been logged out"}, {"Location": "/"}
