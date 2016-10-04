@@ -18,7 +18,7 @@ def wrong_email():
     return response
 
 def incomplete_request(missing_fields=None):
-    response = jsonify({"error": "Incomplete request, missing required fields", "status_code": 409,\
+    response = jsonify({"error": "Incomplete request, Missing required fields.", "status_code": 409,\
                     "missing_fields": missing_fields})
     response.status_code = 409
     return response
