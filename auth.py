@@ -1,9 +1,8 @@
-from helpers import send_response, wrong_password, wrong_email, get_missing_fields, incomplete_request, bad_request,\
-email_already_registered
+from helpers import wrong_password, wrong_email, get_missing_fields, incomplete_request, bad_request,\
+email_already_registered, login_successful, logout_successful
 from sqlalchemy.exc import IntegrityError
-from flask import session, url_for
 from models import Company
-from app import * 
+from app import *
 
 def register_company(payload):
 
@@ -30,13 +29,11 @@ def login_company(payload):
 
     if company is not None:
         if company.verify_password(password) == True:
-            session['company'] = company.email
-            return 302, {"message": "Login successful"}, {"Location": url_for('index')}
+            return login_successful(company_email=company.email)
         else:
             return wrong_password()
     else:
         return wrong_email()
 
 def logout_company():
-    session.clear()
-    return 302, {"message": "You have been logged out"}, {"Location": url_for('index')}
+    return logout_successful()
