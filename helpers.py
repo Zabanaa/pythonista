@@ -1,5 +1,5 @@
-from flask import jsonify
-from app import db
+from app import *
+from flask import jsonify, session, url_for
 from models import Company
 
 def wrong_password():
@@ -18,8 +18,13 @@ def incomplete_request(missing_fields=None):
 def bad_request(reason=None):
     return 400, {"error": "Something went wrong", "status_code": 400, "reason": reason}, {}
 
-def send_response(status_code, response_object):
-    return jsonify(response_object), status_code
+def login_successful(company_email=None):
+    session['company'] = company_email
+    return 302, {"message": "Login successful"}, {"Location": url_for('index')}
+
+def logout_successful():
+    session.clear()
+    return 302, {"message": "You have been logged out"}, {"Location": url_for('index')}
 
 def get_missing_fields(response_body):
 
