@@ -11,11 +11,8 @@ def register_company(payload):
         new_company = Company(payload)
         db.session.add(new_company)
         db.session.commit()
-        return send_response(201, {
-                "status_code": 201,
-                "resource": new_company.serialise()
-        })
-    # return the resources url in the location response header ('location' = newcompany.get_url)
+        return 201, {"message" : "bruv"}, {"Location": "bruvjj"}
+
     except IntegrityError as e:
         cause_of_error = str(e.__dict__['orig'])
         if "violates unique constraint" in cause_of_error:
