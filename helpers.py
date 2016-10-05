@@ -15,6 +15,10 @@ def incomplete_request(missing_fields=None):
     return 409, {"error": "Incomplete request, Missing required fields.", "status_code": 409,\
                     "missing_fields": missing_fields}, {}
 
+def unauthorised():
+    return 403, {"error": "Unauthorised", "status_code": 403}, {"Location": url_for('login')}
+
+
 def bad_request(reason=None):
     return 400, {"error": "Something went wrong", "status_code": 400, "reason": reason}, {}
 
