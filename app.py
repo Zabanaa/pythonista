@@ -1,6 +1,5 @@
 from flask import Flask, request, session
 from flask_sqlalchemy import SQLAlchemy
-from decorators import serialise_json
 
 app = Flask(__name__)
 app.config.from_object('config.DevelopmentConfig')
@@ -9,13 +8,12 @@ db = SQLAlchemy(app)
 from models import *
 from auth import *
 from api_helpers import *
+from decorators import serialise_json, login_required
 
 @app.route('/')
+@login_required
 def index():
-    if 'company' in session:
-        return "Hello %s, and welcome back home" % session['company'], 200
-    else:
-        return "Hello and welcome to pythonista.io, please login", 200
+    return "Hello %s, and welcome back home" % session['company']
 
 @app.route('/register', methods=['GET'])
 def load_register_page():
