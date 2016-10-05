@@ -49,5 +49,12 @@ def companies():
 def company(company_id):
     return get_company(company_id)
 
+
+@app.route('/api/jobs', methods=['POST'])
+@serialise_json
+def post_job():
+    form = request.get_json()
+    return publish_job(form)
+
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
