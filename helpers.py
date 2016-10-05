@@ -1,6 +1,6 @@
 from app import *
 from flask import jsonify, session, url_for
-from models import * 
+from models import *
 
 def wrong_password():
     return 401, {"error": "The password you provided is incorrect", "status_code": 401}, {}
@@ -17,6 +17,9 @@ def incomplete_request(missing_fields=None):
 
 def bad_request(reason=None):
     return 400, {"error": "Something went wrong", "status_code": 400, "reason": reason}, {}
+
+def not_found():
+    return 404, {"error": "Not found", "status_code": 404}, {}
 
 def login_successful(company_email=None):
     session['company'] = company_email
