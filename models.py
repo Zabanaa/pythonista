@@ -46,7 +46,9 @@ class Company(db.Model):
             "website"   : self.website,
             "twitter"   : self.twitter,
             "facebook"  : self.facebook,
-            "linkedin"  : self.linkedin
+            "linkedin"  : self.linkedin,
+            "total_staff": self.total_staff,
+            "resource_url": self.get_url()
     #        "jobs"      : self.get_jobs()
         }
 
