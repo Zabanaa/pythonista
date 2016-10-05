@@ -18,7 +18,6 @@ def incomplete_request(missing_fields=None):
 def unauthorised():
     return 403, {"error": "Unauthorised", "status_code": 403}, {"Location": url_for('login')}
 
-
 def bad_request(reason=None):
     return 400, {"error": "Something went wrong", "status_code": 400, "reason": reason}, {}
 
