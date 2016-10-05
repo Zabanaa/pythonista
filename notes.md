@@ -20,8 +20,10 @@ ROUTES
 
 ## Companies 
 /companies 
-/companies/id AND /companies/name
-/companies/name/jobs AND /companies/id/jobs
+/companies/id
+/companies/jobs 
+/companies/id/edit PUT to /api/companies/id
+
 
 ## Optional
 
@@ -30,17 +32,20 @@ How to handle the updating of users profiles
 
 API
 ------------------------------
-GET    /api/jobs/                     
 POST   /api/jobs/                          Protected
+GET    /api/jobs/                     
 GET    /api/jobs/id/                       
 POST   /api/jobs/id/                       Protected  
 DELETE /api/jobs/id/                       Protected 
-GET    /api/companies/                          
-POST   /api/companies/                     Protected
-GET    /api/companies/id/                       
+
+GET    /api/companies/ **DONE**
+GET    /api/companies/id/ **DONE**                      
 PUT    /api/companies/id/                  Protected      
 GET    /api/companies/id/jobs/             
 
+TBD
+--------------------------------
+POST   /api/companies/                     Protected
 
 MODELS
 ----------------------------------
