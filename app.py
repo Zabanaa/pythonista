@@ -6,10 +6,9 @@ app = Flask(__name__)
 app.config.from_object('config.DevelopmentConfig')
 
 db = SQLAlchemy(app)
-from models import * 
+from models import *
 from auth import *
 from api_helpers import *
-
 
 @app.route('/')
 def index():
@@ -45,16 +44,13 @@ def logout():
 
 @app.route('/api/companies', methods=['GET'])
 @serialise_json
-def get_companies():
-    companies = [c.serialise() for c in Company.query.all()]
-    return 200, {"status_code": 200, "companies": companies}, {}
+def companies():
+    return get_companies()
 
-
-# get company (accepts company_id as a parameter)
-# get_job_by_id (accepts job_id as a parameter)
-# get_company_jobs (accepts company_id as a parameter and queries the db to get all the jobs related to that company)
-
-
+@app.route('/api/companies/<int:company_id>', methods=['GET'])
+@serialise_json
+def company(company_id):
+    return get_company(company_id)
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
