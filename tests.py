@@ -47,7 +47,7 @@ class TestCase(unittest.TestCase):
     def test_get_index_works(self):
         response = self.app.get('/', content_type="text/html")
         self.assertEqual(response.status_code, 200)
-        self.assertIn("please login", str(response.data))
+        self.assertIn("You're not logged in", str(response.data))
 
     def test_get_index_with_session(self):
         signup      = self.post('/register', self.numa)
@@ -67,7 +67,6 @@ class TestCase(unittest.TestCase):
         json_response   = self.decode_json(response.data)
         self.assertEqual(response.status_code, 201)
         self.assertIn('message', json_response)
-        print(response.headers['Location'])
         self.assertIn('/api/companies/1',response.headers['Location'])
 
     def test_register_missing_fields(self):
@@ -119,7 +118,7 @@ class TestCase(unittest.TestCase):
         logout          = self.app.get('/logout', follow_redirects=True)
         with self.app.session_transaction() as session:
             self.assertNotIn('company', session)
-            self.assertIn('please login', str(logout.data))
+            self.assertIn("You're not logged in", str(logout.data))
 
     def test_get_companies(self):
         companies = self.app.get('/api/companies')
