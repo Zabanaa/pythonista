@@ -11,9 +11,8 @@ from api_helpers import *
 from decorators import serialise_json, login_required
 
 @app.route('/')
-@login_required
 def index():
-    return "Hello %s, and welcome back home" % session['company']
+    return "Hello, please log in"
 
 @app.route('/register', methods=['GET'])
 def load_register_page():
