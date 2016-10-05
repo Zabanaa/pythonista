@@ -25,7 +25,7 @@ class Company(db.Model):
             setattr(self, key, value)
 
     def get_url(self):
-        return url_for('app.get_company', company_id=self.id, _external=True)
+        return url_for('company', company_id=self.id, _external=True)
 
     #def get_jobs(self):
     #    return url_for('app.get_company_jobs', company_id=self.id, _external=True)
