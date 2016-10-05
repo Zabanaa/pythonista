@@ -34,8 +34,10 @@ API
 ------------------------------
 POST   /api/jobs/                          Protected
 GET    /api/jobs/                     
+
 GET    /api/jobs/id/                       
 POST   /api/jobs/id/                       Protected  
+PUT    /api/jobs/id                        Protected
 DELETE /api/jobs/id/                       Protected 
 
 GET    /api/companies/ **DONE**
