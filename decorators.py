@@ -1,6 +1,20 @@
-from flask import jsonify
+from flask import jsonify, session, request
+from helpers import *
+from models import *
 import functools
-# Login required decorator
+
+def login_required(f):
+    @functools.wraps(f)
+    def wrapped(*args, **kwargs):
+        if 'company' in session:
+            company = Company.query.filter_by(email=session['company']).first()
+
+            if session['company'] == company.email:
+                return f(*args, **kwargs)
+        else:
+            return "You're not logged in"
+    return wrapped
+
 # check if company is in the session
 # check that the session value is equal to the actual company name
 # if so execute the function
