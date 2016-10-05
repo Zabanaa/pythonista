@@ -10,7 +10,7 @@ def register_company(payload):
         new_company = Company(payload)
         db.session.add(new_company)
         db.session.commit()
-        return 201, {"message" : "Registration successful"}, {"Location": "bruvjjj"}
+        return 201, {"message" : "Registration successful"}, {"Location": new_company.get_url()}
 
     except IntegrityError as e:
         cause_of_error = str(e.__dict__['orig'])
