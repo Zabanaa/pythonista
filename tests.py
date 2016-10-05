@@ -47,7 +47,7 @@ class TestCase(unittest.TestCase):
     def test_get_index_works(self):
         response = self.app.get('/', content_type="text/html")
         self.assertEqual(response.status_code, 200)
-        self.assertIn("You're not logged in", str(response.data))
+        self.assertIn("please log in", str(response.data))
 
     def test_get_index_with_session(self):
         signup      = self.post('/register', self.numa)
@@ -55,7 +55,7 @@ class TestCase(unittest.TestCase):
         response    = self.app.get('/')
         with self.app.session_transaction() as session:
             self.assertEqual(response.status_code, 200)
-            self.assertIn("Hello %s, and welcome back home" % session['company'], str(response.data))
+            self.assertEqual(self.numa['email'], session['company'])
 
     def test_get_register_works(self):
         response = self.app.get('/register', content_type="text/html")
@@ -94,7 +94,7 @@ class TestCase(unittest.TestCase):
 
         with self.app.session_transaction() as sess:
             self.assertEqual(self.numa['email'], sess['company'])
-            self.assertIn(sess['company'], str(login_response.data))
+            self.assertIn("please log in", str(login_response.data))
 
     def test_login_incorrect_password(self):
         signup              = self.post('/register', self.numa)
@@ -118,7 +118,7 @@ class TestCase(unittest.TestCase):
         logout          = self.app.get('/logout', follow_redirects=True)
         with self.app.session_transaction() as session:
             self.assertNotIn('company', session)
-            self.assertIn("You're not logged in", str(logout.data))
+            self.assertIn("please log in", str(logout.data))
 
     def test_get_companies(self):
         companies = self.app.get('/api/companies')
