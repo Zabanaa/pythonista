@@ -1,8 +1,8 @@
 from helpers import wrong_password, wrong_email, get_missing_fields, incomplete_request, bad_request,\
 email_already_registered, login_successful, logout_successful
 from sqlalchemy.exc import IntegrityError
-from models import Company
 from app import *
+from models import *
 
 def register_company(payload):
 

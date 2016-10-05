@@ -1,6 +1,6 @@
 from app import *
 from flask import jsonify, session, url_for
-from models import Company
+from models import * 
 
 def wrong_password():
     return 401, {"error": "The password you provided is incorrect", "status_code": 401}, {}
