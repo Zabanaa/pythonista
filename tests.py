@@ -8,6 +8,7 @@ from flask import request
 class TestCase(unittest.TestCase):
 
     numa = {
+        "id": 1,
         "email":"paris@numa.com",
         "password":"numaparis",
         "name":"Numa Paris",
@@ -66,6 +67,8 @@ class TestCase(unittest.TestCase):
         json_response   = self.decode_json(response.data)
         self.assertEqual(response.status_code, 201)
         self.assertIn('message', json_response)
+        print(response.headers['Location'])
+        self.assertIn('/api/companies/1',response.headers['Location'])
 
     def test_register_missing_fields(self):
         response        = self.post('/register', self.numa_missing_fields)
@@ -116,7 +119,20 @@ class TestCase(unittest.TestCase):
         logout          = self.app.get('/logout', follow_redirects=True)
         with self.app.session_transaction() as session:
             self.assertNotIn('company', session)
-            self.assertIn('please login', str(logout.data)) 
+            self.assertIn('please login', str(logout.data))
+
+    def test_get_companies(self):
+        companies = self.app.get('/api/companies')
+        json_response = self.decode_json(companies.data)
+        self.assertIn('companies', json_response)
+        self.assertEqual(200, companies.status_code)
+
+    def test_get_company(self):
+        signup = self.post('/register', self.numa)
+        company = self.app.get('/api/companies/1')
+        json_response = self.decode_json(company.data)
+        self.assertIn('company', json_response)
+        self.assertTrue(200, company.status_code)
 
 if __name__ == "__main__":
     unittest.main()
