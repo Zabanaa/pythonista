@@ -70,15 +70,17 @@ class Job(db.Model):
     title               = db.Column(db.String(70), nullable=False)
     description         = db.Column(db.Text(), nullable=False)
     salary_range        = db.Column(db.String(60), nullable=True)
+    # salary_max
+    # salary_min
     contract_type       = db.Column(ChoiceType(CONTRACTS), nullable=False)
     company_id          = db.Column(db.Integer, db.ForeignKey('company.id'))
 
-    def __init__(self, **properties):
+    def __init__(self, properties):
         for key, value in properties.items():
             setattr(self, key, value)
 
-    def get_url(self):
-        return url_for("app.get_job_by_id", job_id=self.id, _extract=True)
+#    def get_url(self):
+#        return url_for("app.get_job_by_id", job_id=self.id, _extract=True)
 
 
     def serialise(self):
@@ -94,8 +96,3 @@ class Job(db.Model):
 
     def __repr__(self):
         return self.title
-
-
-
-
-
