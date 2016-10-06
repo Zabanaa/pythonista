@@ -13,6 +13,14 @@ def get_company(company_id):
         return not_found()
     return 200, {"status_code": 200, "company": company.serialise()}, {}
 
+def get_company_jobs(company_id):
+    company = Company.query.filter_by(id=company_id).first()
+    if company is not None:
+        jobs = [job.serialise() for job in Job.query.filter_by(company_id=company_id).all()]
+        return 200, {"status_code": 200, "jobs": jobs}, {}
+    else:
+        return not_found()
+
 def publish_job(payload):
 
     try:
