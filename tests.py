@@ -173,10 +173,10 @@ class TestCase(unittest.TestCase):
         self.assertEqual(200, jobs.status_code)
         self.assertIn('jobs', self.decode_json(jobs.data))
 
-    def get_job(self):
+    def test_get_job(self):
         signup = self.post('/register', self.numa)
         login  = self.post('/login', self.login_creds)
-        post_job = self.post('/api/job', self.numa_job)
+        post_job = self.post('/api/jobs', self.numa_job)
         job = self.app.get(post_job.headers['Location'])
         self.assertEqual(200, job.status_code)
 
