@@ -29,6 +29,15 @@ class TestCase(unittest.TestCase):
         "company_id": 1
     }
 
+    numa_job2 = {
+        "title": "Defender",
+        "tags": "arsenal, fuck koscielny",
+        "description": "Stop scoring own goals",
+        "salary_range": "98000 - 123000 ",
+        "contract_type": "full_time",
+        "company_id": 1
+    }
+
     numa_missing_fields = {"name": numa['name'], "bio": numa['bio']}
     login_creds = {"email": numa['email'], "password": numa['password']}
     login_wrongpw = {"email": numa['email'], "password": "kehwleq"}
@@ -137,7 +146,7 @@ class TestCase(unittest.TestCase):
 
     def test_get_company(self):
         signup = self.post('/register', self.numa)
-        company = self.app.get('/api/companies/1')
+        company = self.app.get(signup.headers['location'])
         json_response = self.decode_json(company.data)
         self.assertIn('company', json_response)
         self.assertTrue(200, company.status_code)
@@ -145,7 +154,7 @@ class TestCase(unittest.TestCase):
     def test_publish_job_unauthorised(self):
         signup = self.post('/register', self.numa)
         post_job = self.post('/api/jobs', self.numa_job)
-        self.assertTrue(403, post_job.status_code)
+        self.assertEqual(403, post_job.status_code)
         self.assertIn('/login', post_job.headers['Location'])
 
     def test_publish_job_logged_in(self):
@@ -155,7 +164,21 @@ class TestCase(unittest.TestCase):
         self.assertTrue(201, post_job.status_code)
         self.assertIn('/api/jobs/1', post_job.headers['Location'])
 
+    def test_get_all_jobs(self):
+        signup = self.post('/register', self.numa)
+        login  = self.post('/login', self.login_creds)
+        post_job = self.post('/api/jobs', self.numa_job)
+        post_job2 = self.post('/api/jobs', self.numa_job)
+        jobs = self.app.get('/api/jobs')
+        self.assertEqual(200, jobs.status_code)
+        self.assertIn('jobs', self.decode_json(jobs.data))
 
+    def get_job(self):
+        signup = self.post('/register', self.numa)
+        login  = self.post('/login', self.login_creds)
+        post_job = self.post('/api/job', self.numa_job)
+        job = self.app.get(post_job.headers['Location'])
+        self.assertEqual(200, job.status_code)
 
 
 if __name__ == "__main__":
