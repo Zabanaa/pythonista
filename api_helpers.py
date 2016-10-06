@@ -19,10 +19,17 @@ def publish_job(payload):
         new_job = Job(payload)
         db.session.add(new_job)
         db.session.commit()
-        return 201, {"status_code": 201, "message": "Job was successfully published"}, {"Location": "Bruv"}
+        return 201, {"status_code": 201, "message": "Job was successfully published"}, {"Location": new_job.get_url()}
     except IntegrityError as e:
         # get error origin
         print(e)
         return "bruv"
         # check not null constraint
         # check unique constraint
+
+def get_job(job_id):
+
+    job = Job.query.filter_by(id=job_id).first()
+    if job is None:
+        return not_found()
+    return 200, {"status_code": 200, "job": job.serialise()}, {}
