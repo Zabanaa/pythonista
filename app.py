@@ -49,13 +49,17 @@ def companies():
 def company(company_id):
     return get_company(company_id)
 
+@app.route('/api/companies/<int:company_id>/jobs', methods=['GET'])
+@serialise_json
+def company_jobs(company_id):
+    return get_company_jobs(company_id)
+
 @app.route('/api/jobs', methods=['POST'])
 @serialise_json
 @login_required
 def post_job():
     form = request.get_json()
     return publish_job(form)
-
 
 @app.route('/api/jobs', methods=['GET'])
 @serialise_json
@@ -66,7 +70,6 @@ def jobs():
 @serialise_json
 def job(job_id):
     return get_job(job_id)
-
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
