@@ -38,18 +38,18 @@ class Company(db.Model):
 
     def serialise(self):
         return {
-            "id"        : self.id,
-            "bio"       : self.bio,
-            "email"     : self.email,
-            "name"      : self.name,
-            "location"  : self.location,
-            "website"   : self.website,
-            "twitter"   : self.twitter,
-            "facebook"  : self.facebook,
-            "linkedin"  : self.linkedin,
-            "total_staff": self.total_staff,
-            "resource_url": self.get_url(),
-            "jobs"      : self.get_jobs()
+            "id"            : self.id,
+            "bio"           : self.bio,
+            "email"         : self.email,
+            "name"          : self.name,
+            "location"      : self.location,
+            "website"       : self.website,
+            "twitter"       : self.twitter,
+            "facebook"      : self.facebook,
+            "linkedin"      : self.linkedin,
+            "total_staff"   : self.total_staff,
+            "company_url"   : self.get_url(),
+            "jobs_url"      : self.get_jobs()
         }
 
     def __repr__(self):
