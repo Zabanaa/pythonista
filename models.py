@@ -79,8 +79,8 @@ class Job(db.Model):
         for key, value in properties.items():
             setattr(self, key, value)
 
-#    def get_url(self):
-#        return url_for("app.get_job_by_id", job_id=self.id, _extract=True)
+    def get_url(self):
+        return url_for("get_job_by_id", job_id=self.id, _extract=True)
 
 
     def serialise(self):
