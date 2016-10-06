@@ -180,6 +180,20 @@ class TestCase(unittest.TestCase):
         job = self.app.get(post_job.headers['Location'])
         self.assertEqual(200, job.status_code)
 
+    def test_company_jobs(self):
+        signup = self.post('/register', self.numa)
+        company = self.app.get(signup.headers['Location'])
+        company_json = self.decode_json(company.data)
+        login  = self.post('/login', self.login_creds)
+        post_job = self.post('/api/jobs', self.numa_job)
+        post_job2 = self.post('/api/jobs', self.numa_job)
+        company_jobs_url = company_json['company']['jobs_url']
+        company_jobs_list = self.app.get(company_jobs_url)
+        company_list_json = self.decode_json(company_jobs_list.data)
+        self.assertTrue(200, company_jobs_list.status_code)
+        self.assertIn('jobs', company_list_json)
+
+
 
 if __name__ == "__main__":
     unittest.main()
