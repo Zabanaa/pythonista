@@ -56,15 +56,16 @@ def post_job():
     form = request.get_json()
     return publish_job(form)
 
+
+@app.route('/api/jobs', methods=['GET'])
+@serialise_json
+def jobs():
+    return get_jobs()
+
 @app.route('/api/jobs/<int:job_id>', methods=['GET'])
 @serialise_json
-@login_required
-def get_job_by_id(job_id):
+def job(job_id):
     return get_job(job_id)
-
-
-
-
 
 
 if __name__ == "__main__":
