@@ -4,7 +4,7 @@ from sqlalchemy.exc import IntegrityError
 from app import db
 
 def get_companies():
-    companies = [c.serialise() for c in Company.query.all()]
+    companies = [company.serialise() for company in Company.query.all()]
     return 200, {"status_code": 200, "companies": companies}, {}
 
 def get_company(company_id):
@@ -26,6 +26,10 @@ def publish_job(payload):
         return "bruv"
         # check not null constraint
         # check unique constraint
+
+def get_jobs():
+    jobs = [job.serialise() for job in Job.query.all()]
+    return 200, {"status_code": 200, "jobs":  jobs}, {}
 
 def get_job(job_id):
 
