@@ -32,22 +32,23 @@ How to handle the updating of users profiles
 
 API
 ------------------------------
-POST   /api/jobs/                          Protected
-GET    /api/jobs/                     
-
-GET    /api/jobs/id/                       
-POST   /api/jobs/id/                       Protected  
 PUT    /api/jobs/id                        Protected
 DELETE /api/jobs/id/                       Protected 
-
-GET    /api/companies/ **DONE**
-GET    /api/companies/id/ **DONE**                      
-PUT    /api/companies/id/                  Protected      
-GET    /api/companies/id/jobs/             
+PUT    /api/companies/id/                  Protected 
 
 TBD
 --------------------------------
 POST   /api/companies/                     Protected
+
+DONE
+-----------------------------
+
+GET    /api/jobs/id/                       
+GET    /api/jobs/                     
+POST   /api/jobs/                          Protected 
+GET    /api/companies/ 
+GET    /api/companies/id/                            
+GET    /api/companies/id/jobs/                      
 
 MODELS
 ----------------------------------
