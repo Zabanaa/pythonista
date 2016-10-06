@@ -12,7 +12,7 @@ def login_required(f):
             if session['company'] == company.email:
                 return f(*args, **kwargs)
         else:
-            return "You're not logged in"
+            return unauthorised() 
     return wrapped
 
 # check if company is in the session
