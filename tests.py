@@ -20,6 +20,15 @@ class TestCase(unittest.TestCase):
         "bio":"Startup hub in Paris"
     }
 
+    numa_job = {
+        "title": "striker",
+        "tags": "arsenal, fuck giroud",
+        "description": "Play ball",
+        "salary_range": "12000 - 23000 ",
+        "contract_type": "full_time",
+        "company_id": 1
+    }
+
     numa_missing_fields = {"name": numa['name'], "bio": numa['bio']}
     login_creds = {"email": numa['email'], "password": numa['password']}
     login_wrongpw = {"email": numa['email'], "password": "kehwleq"}
@@ -132,6 +141,22 @@ class TestCase(unittest.TestCase):
         json_response = self.decode_json(company.data)
         self.assertIn('company', json_response)
         self.assertTrue(200, company.status_code)
+
+    def test_publish_job_unauthorised(self):
+        signup = self.post('/register', self.numa)
+        post_job = self.post('/api/jobs', self.numa_job)
+        self.assertTrue(403, post_job.status_code)
+        self.assertIn('/login', post_job.headers['Location'])
+
+    def test_publish_job_logged_in(self):
+        signup = self.post('/register', self.numa)
+        login  = self.post('/login', self.login_creds)
+        post_job = self.post('/api/jobs', self.numa_job)
+        self.assertTrue(201, post_job.status_code)
+        self.assertIn('/api/jobs/1', post_job.headers['Location'])
+
+
+
 
 if __name__ == "__main__":
     unittest.main()
