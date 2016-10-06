@@ -25,7 +25,7 @@ class Company(db.Model):
             setattr(self, key, value)
 
     def get_url(self):
-        return url_for('company', company_id=self.id, _external=True)
+        return url_for('company', company_id=self.id)
 
     #def get_jobs(self):
     #    return url_for('app.get_company_jobs', company_id=self.id, _external=True)
@@ -80,8 +80,10 @@ class Job(db.Model):
             setattr(self, key, value)
 
     def get_url(self):
-        return url_for("get_job_by_id", job_id=self.id, _extract=True)
+        return url_for("job", job_id=self.id)
 
+    def get_company(self):
+        return url_for("company", company_id=self.company_id)
 
     def serialise(self):
         return {
@@ -90,8 +92,9 @@ class Job(db.Model):
             "title"     : self.title,
             "description"   : self.description,
             "salary_range"  : self.salary_range,
-            "contract_type" : self.contract_type,
-            "company_id"    : self.company_id
+            "contract_type" : self.contract_type.value,
+            "company_id"    : self.company_id,
+            "company": self.get_company()
         }
 
     def __repr__(self):
