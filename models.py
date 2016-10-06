@@ -58,8 +58,8 @@ class Company(db.Model):
 class Job(db.Model):
 
     CONTRACTS = [
-        ('full_time', 'Full Time'),
-        ('part_time', 'Part Time'),
+        ('full-time', 'Full Time'),
+        ('part-time', 'Part Time'),
         ('contract',  'Contract'),
         ('internship', 'Internship'),
         ('remote', 'Remote')
