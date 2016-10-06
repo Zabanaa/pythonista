@@ -27,10 +27,8 @@ class Company(db.Model):
     def get_url(self):
         return url_for('company', company_id=self.id)
 
-    # TODO
-    # create /api/company/id/jobs
-    #def get_jobs(self):
-    #    return url_for('app.get_company_jobs', company_id=self.id, _external=True)
+    def get_jobs(self):
+        return url_for('company_jobs', company_id=self.id, _external=True)
 
     def hash_password(self, password):
         return generate_password_hash(password)
@@ -50,8 +48,8 @@ class Company(db.Model):
             "facebook"  : self.facebook,
             "linkedin"  : self.linkedin,
             "total_staff": self.total_staff,
-            "resource_url": self.get_url()
-    #        "jobs"      : self.get_jobs()
+            "resource_url": self.get_url(),
+            "jobs"      : self.get_jobs()
         }
 
     def __repr__(self):
