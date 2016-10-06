@@ -80,10 +80,10 @@ class Job(db.Model):
             setattr(self, key, value)
 
     def get_url(self):
-        return url_for("job", job_id=self.id)
+        return url_for("job", job_id=self.id, _external=True)
 
     def get_company(self):
-        return url_for("company", company_id=self.company_id)
+        return url_for("company", company_id=self.company_id, _external=True)
 
     def serialise(self):
         return {
