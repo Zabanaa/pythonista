@@ -27,6 +27,8 @@ class Company(db.Model):
     def get_url(self):
         return url_for('company', company_id=self.id)
 
+    # TODO
+    # create /api/company/id/jobs
     #def get_jobs(self):
     #    return url_for('app.get_company_jobs', company_id=self.id, _external=True)
 
@@ -93,8 +95,8 @@ class Job(db.Model):
             "description"   : self.description,
             "salary_range"  : self.salary_range,
             "contract_type" : self.contract_type.value,
-            "company_id"    : self.company_id,
-            "company": self.get_company()
+            "company": self.get_company(),
+            "url": self.get_url()
         }
 
     def __repr__(self):
