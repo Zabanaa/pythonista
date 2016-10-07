@@ -46,6 +46,7 @@ DONE
 GET    /api/jobs/id/                       
 GET    /api/jobs/                     
 POST   /api/jobs/                          Protected 
+GET    /api/jobs/contract-type
 GET    /api/companies/ 
 GET    /api/companies/id/                            
 GET    /api/companies/id/jobs/                      
