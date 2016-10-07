@@ -25,7 +25,7 @@ class TestCase(unittest.TestCase):
         "tags": "arsenal, fuck giroud",
         "description": "Play ball",
         "salary_range": "12000 - 23000 ",
-        "contract_type": "full_time",
+        "contract_type": "full-time",
         "company_id": 1
     }
 
@@ -39,6 +39,7 @@ class TestCase(unittest.TestCase):
     }
 
     numa_missing_fields = {"name": numa['name'], "bio": numa['bio']}
+    numa_job_missing_fields = {"title": "striker", "salary_range": "23400 - 39400"}
     login_creds = {"email": numa['email'], "password": numa['password']}
     login_wrongpw = {"email": numa['email'], "password": "kehwleq"}
     login_wrong_user = {"email": "dskjdksjdksjds", "password": "kehwleq"}
@@ -163,6 +164,15 @@ class TestCase(unittest.TestCase):
         post_job = self.post('/api/jobs', self.numa_job)
         self.assertTrue(201, post_job.status_code)
         self.assertIn('/api/jobs/1', post_job.headers['Location'])
+
+
+    def test_publish_job_missing_fields(self):
+        signup = self.post('/register', self.numa)
+        login  = self.post('/login', self.login_creds)
+        post_job = self.post('/api/jobs', self.numa_job_missing_fields)
+        post_job_response = self.decode_json(post_job.data)
+        self.assertEqual(409, post_job.status_code)
+        self.assertEqual("Incomplete request, Missing required fields.",post_job_response['error'])
 
     def test_get_all_jobs(self):
         signup = self.post('/register', self.numa)
