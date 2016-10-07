@@ -32,7 +32,7 @@ def publish_job(payload):
         cause_of_error = str(e.__dict__['orig'])
         if "not-null" in cause_of_error:
             missing_fields = get_missing_fields(e.__dict__['params'])
-            return imcomplete_request(missing_fields=missing_fields)
+            return incomplete_request(missing_fields=missing_fields)
         else:
             return bad_request()
 
@@ -47,8 +47,11 @@ def get_job(job_id):
     return 200, {"status_code": 200, "job": job.serialise()}, {}
 
 def get_job_type(contract_type):
-    jobs = [job.serialise() for job in Job.query.filter_by(contract_type=contract_type).all()]
-    if jobs is None:
-        return not_found()
-    return 200, {"status_code": 200, "contract_type": contract_type, "results": jobs}, {}
+    valid_contract_types = [contract[0] for contract in Job.CONTRACTS]
+
+    if contract_type not in valid_contract_types:
+        return 404, {"status_code": 404, "error": "Invalid contract type"}, {}
+    else:
+        jobs = [job.serialise() for job in Job.query.filter_by(contract_type=contract_type).all()]
+        return 200, {"status_code": 200, "contract_type": contract_type, "results": jobs}, {}
 
