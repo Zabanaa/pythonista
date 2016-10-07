@@ -71,5 +71,10 @@ def jobs():
 def job(job_id):
     return get_job(job_id)
 
+@app.route('/api/jobs/<string:contract_type>', methods=['GET'])
+@serialise_json
+def job_type(contract_type):
+    return get_job_type(contract_type)
+
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
