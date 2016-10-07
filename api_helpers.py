@@ -40,8 +40,14 @@ def get_jobs():
     return 200, {"status_code": 200, "jobs":  jobs}, {}
 
 def get_job(job_id):
-
     job = Job.query.filter_by(id=job_id).first()
     if job is None:
         return not_found()
     return 200, {"status_code": 200, "job": job.serialise()}, {}
+
+def get_job_type(contract_type):
+    jobs = [job.serialise() for job in Job.query.filter_by(contract_type=contract_type).all()]
+    if jobs is None:
+        return not_found()
+    return 200, {"status_code": 200, "contract_type": contract_type, "results": jobs}, {}
+
