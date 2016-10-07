@@ -203,6 +203,14 @@ class TestCase(unittest.TestCase):
         self.assertTrue(200, company_jobs_list.status_code)
         self.assertIn('jobs', company_list_json)
 
+    def test_company_job_type(self):
+        signup = self.post('/register', self.numa)
+        login  = self.post('/login', self.login_creds)
+        post_job = self.post('/api/jobs', self.numa_job)
+        post_job_response = self.decode_json(post_job.data)
+        get_jobs_type = self.app.get('/api/jobs/full-time')
+        self.assertEqual(200, get_jobs_type.status_code)
+
 
 
 if __name__ == "__main__":
