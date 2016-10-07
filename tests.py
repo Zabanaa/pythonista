@@ -190,7 +190,7 @@ class TestCase(unittest.TestCase):
         job = self.app.get(post_job.headers['Location'])
         self.assertEqual(200, job.status_code)
 
-    def test_company_jobs(self):
+    def test_get_company_jobs(self):
         signup = self.post('/register', self.numa)
         company = self.app.get(signup.headers['Location'])
         company_json = self.decode_json(company.data)
@@ -203,14 +203,21 @@ class TestCase(unittest.TestCase):
         self.assertTrue(200, company_jobs_list.status_code)
         self.assertIn('jobs', company_list_json)
 
-    def test_company_job_type(self):
+    def test_get_job_correct_contract_type(self):
         signup = self.post('/register', self.numa)
         login  = self.post('/login', self.login_creds)
         post_job = self.post('/api/jobs', self.numa_job)
-        post_job_response = self.decode_json(post_job.data)
         get_jobs_type = self.app.get('/api/jobs/full-time')
         self.assertEqual(200, get_jobs_type.status_code)
 
+    def test_get_jobs_invalid_contract_type(self):
+        signup = self.post('/register', self.numa)
+        login  = self.post('/login', self.login_creds)
+        post_job = self.post('/api/jobs', self.numa_job)
+        get_jobs_type = self.app.get('/api/jobs/solidsnakebitch')
+        get_jobs_type_response = self.decode_json(get_jobs_type.data)
+        self.assertEqual(404, get_jobs_type.status_code)
+        self.assertEqual("Invalid contract type", get_jobs_type_response['error'])
 
 
 if __name__ == "__main__":
