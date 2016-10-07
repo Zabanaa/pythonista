@@ -29,11 +29,12 @@ def publish_job(payload):
         db.session.commit()
         return 201, {"status_code": 201, "message": "Job was successfully published"}, {"Location": new_job.get_url()}
     except IntegrityError as e:
-        # get error origin
-        print(e)
-        return "bruv"
-        # check not null constraint
-        # check unique constraint
+        cause_of_error = str(e.__dict__['orig'])
+        if "not-null" in cause_of_error:
+            missing_fields = get_missing_fields(e.__dict__['params'])
+            return imcomplete_request(missing_fields=missing_fields)
+        else:
+            return bad_request()
 
 def get_jobs():
     jobs = [job.serialise() for job in Job.query.all()]
