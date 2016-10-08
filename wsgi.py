@@ -1,4 +1,4 @@
-from pkg import app as application
+from pythonista import app as application
 
 if __name__ == "__main__":
     application.run(debug=True)

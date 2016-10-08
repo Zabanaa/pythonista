@@ -4,13 +4,13 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 db = SQLAlchemy(app)
 
-from pkg.api.routes import api
-from pkg.auth.routes import auth
+from pythonista.api.routes import api
+from pythonista.auth.routes import auth
 
 app.register_blueprint(api, url_prefix='/api')
 app.register_blueprint(auth)
 
-app.config.from_object('pkg.config.DevelopmentConfig')
+app.config.from_object('pythonista.config.DevelopmentConfig')
 
 @app.route('/')
 def index():

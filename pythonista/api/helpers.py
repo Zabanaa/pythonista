@@ -1,7 +1,7 @@
 from ..helpers import get_missing_fields, incomplete_request
-from pkg.models import *
+from pythonista.models import *
 from sqlalchemy.exc import IntegrityError
-from pkg import db
+from pythonista import db
 
 def get_companies():
     companies = [company.serialise() for company in Company.query.all()]

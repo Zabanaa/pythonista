@@ -1,4 +1,4 @@
-from pkg import db
+from pythonista import db
 from ..helpers import *
 from ..models import Company
 from sqlalchemy.exc import IntegrityError
