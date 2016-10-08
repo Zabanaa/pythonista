@@ -70,10 +70,10 @@ class Job(db.Model):
     title               = db.Column(db.String(70), nullable=False)
     description         = db.Column(db.Text(), nullable=False)
     salary_range        = db.Column(db.String(60), nullable=True)
-    # salary_max
-    # salary_min
+    salary_max          = db.Column(db.String(10), nullable=True)
+    salary_min          = db.Column(db.String(10), nullable=True)
     contract_type       = db.Column(ChoiceType(CONTRACTS), nullable=False)
-    company_id          = db.Column(db.Integer, db.ForeignKey('company.id'))
+    company_id          = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)
 
     def __init__(self, properties):
         for key, value in properties.items():
@@ -91,7 +91,7 @@ class Job(db.Model):
             "tags"      : self.tags,
             "title"     : self.title,
             "description"   : self.description,
-            "salary_range"  : self.salary_range,
+            "salary_range"  : "%s - %s" % (self.salary_min, self.salary_max),
             "contract_type" : self.contract_type.value,
             "company": self.get_company(),
             "url": self.get_url()
