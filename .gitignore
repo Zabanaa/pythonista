@@ -9,6 +9,7 @@ py[cod]
 # Distribution / packaging
 .Python
 migrations/
+venv/
 env/
 bin/
 build/
