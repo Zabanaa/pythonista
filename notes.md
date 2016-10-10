@@ -29,16 +29,11 @@ ROUTES
 
 How to handle the updating of users profiles
 
-
 API
 ------------------------------
-PUT    /api/jobs/id                        Protected
+PUT    /api/jobs/id                        Protected - Return edited resource
 DELETE /api/jobs/id/                       Protected 
-PUT    /api/companies/id/                  Protected 
-
-TBD
---------------------------------
-POST   /api/companies/                     Protected
+PUT    /api/companies/id/                  Protected - Return edited resource 
 
 DONE
 -----------------------------
@@ -50,6 +45,7 @@ GET    /api/jobs/contract-type
 GET    /api/companies/ 
 GET    /api/companies/id/                            
 GET    /api/companies/id/jobs/                      
+POST   /api/companies/                     
 
 MODELS
 ----------------------------------
