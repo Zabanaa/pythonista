@@ -1,7 +1,7 @@
 from tornado import escape
 import json
 import unittest
-from pkg import app, db
+from pythonista import app, db
 from flask import request
 
 class TestCase(unittest.TestCase):
@@ -44,7 +44,7 @@ class TestCase(unittest.TestCase):
     login_wrong_user = {"email": "dskjdksjdksjds", "password": "kehwleq"}
 
     def setUp(self):
-        app.config.from_object('pkg.config.TestingConfig')
+        app.config.from_object('pythonista.config.TestingConfig')
         self.app = app.test_client()
         db.create_all()
 
