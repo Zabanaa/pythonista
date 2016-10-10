@@ -17,9 +17,6 @@ def logout_company():
 def wrong_password():
     return 401, {"error": "The password you provided is incorrect", "status_code": 401}, {}
 
-def email_already_registered():
-    return 409, {"error": "A company is already registered using this email", "status_code": 409}, {}
-
 def wrong_email():
     return 401, {"error": "No company is registered using this email address", "status_code": 401}, {}
 
@@ -35,24 +32,6 @@ def bad_request(reason=None):
 
 def not_found():
     return 404, {"error": "Not found", "status_code": 404}, {}
-
-def register_company(payload):
-
-    try:
-        new_company = Company(payload)
-        db.session.add(new_company)
-        db.session.commit()
-        return 201, {"status_code": 201, "message" : "Registration successful"}, {"Location": new_company.get_url()}
-
-    except IntegrityError as e:
-        cause_of_error = str(e.__dict__['orig'])
-        if "violates unique constraint" in cause_of_error:
-            return email_already_registered()
-        elif "not-null" in cause_of_error:
-            missing_fields = get_missing_fields(e.__dict__['params'])
-            return incomplete_request(missing_fields=missing_fields)
-        else:
-            return bad_request()
 
 def login_company(payload):
 

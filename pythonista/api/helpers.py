@@ -1,4 +1,4 @@
-from ..errors import get_missing_fields, incomplete_request
+from ..errors import get_missing_fields, incomplete_request, email_already_registered
 from pythonista.models import *
 from sqlalchemy.exc import IntegrityError
 from pythonista import db
@@ -20,6 +20,23 @@ def get_company_jobs(company_id):
         return 200, {"status_code": 200, "jobs": jobs}, {}
     else:
         return not_found()
+
+def register_company(payload):
+
+    try:
+        new_company = Company(payload)
+        db.session.add(new_company)
+        db.session.commit()
+        return 201, {"status_code": 201, "message" : "Registration successful"},{"Location": new_company.get_url()}
+    except IntegrityError as e:
+        cause_of_error = str(e.__dict__['orig'])
+        if "violates unique constraint" in cause_of_error:
+            return email_already_registered()
+        elif "not-null" in cause_of_error:
+            missing_fields = get_missing_fields(e.__dict__['params'])
+            return incomplete_request(missing_fields=missing_fields)
+        else:
+            return bad_request()
 
 def publish_job(payload):
 

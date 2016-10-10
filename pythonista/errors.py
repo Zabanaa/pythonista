@@ -3,7 +3,6 @@ from flask import jsonify, session, url_for
 def incomplete_request(missing_fields=None):
     return 409, {"error": "Incomplete request, Missing required fields.", "status_code": 409,\
                     "missing_fields": missing_fields}, {}
-
 def unauthorised():
     return 403, {"error": "Unauthorised", "status_code": 403}, {"Location": url_for('auth.login')}
 
@@ -27,3 +26,6 @@ def get_missing_fields(response_body):
         if response_body[key] == None:
             missing_fields.append(key)
     return missing_fields
+
+def email_already_registered():
+    return 409, {"error": "A company is already registered using this email", "status_code": 409}, {}

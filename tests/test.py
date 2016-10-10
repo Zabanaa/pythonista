@@ -68,7 +68,7 @@ class TestCase(unittest.TestCase):
         self.assertIn("please log in", str(response.data))
 
     def test_get_index_with_session(self):
-        signup      = self.post('/register', self.numa)
+        signup      = self.post('/api/companies', self.numa)
         login       = self.post('/login', self.login_creds)
         response    = self.app.get('/')
         with self.app.session_transaction() as session:
@@ -76,27 +76,27 @@ class TestCase(unittest.TestCase):
             self.assertEqual(self.numa['email'], session['company'])
 
     def test_get_register_works(self):
-        response = self.app.get('/register', content_type="text/html")
+        response = self.app.get('/api/companies', content_type="text/html")
         self.assertEqual(response.status_code, 200)
 
 
     def test_post_register_works(self):
-        response        = self.post('/register', self.numa)
+        response        = self.post('/api/companies', self.numa)
         json_response   = self.decode_json(response.data)
         self.assertEqual(response.status_code, 201)
         self.assertIn('message', json_response)
         self.assertIn('/api/companies/1',response.headers['Location'])
 
     def test_register_missing_fields(self):
-        response        = self.post('/register', self.numa_missing_fields)
+        response        = self.post('/api/companies', self.numa_missing_fields)
         server_response = self.decode_json(response.data)
         self.assertIn("Incomplete request, Missing required fields.", server_response['error'])
 
         self.assertEqual(server_response['status_code'], 409)
 
     def test_register_username_taken(self):
-        response_one    = self.post('/register', self.numa)
-        response_two    = self.post('/register', self.numa)
+        response_one    = self.post('/api/companies', self.numa)
+        response_two    = self.post('/api/companies', self.numa)
         server_response = self.decode_json(response_two.data)
         self.assertIn("A company is already registered using this email", server_response['error'])
         self.assertEqual(server_response['status_code'], 409)
@@ -107,7 +107,7 @@ class TestCase(unittest.TestCase):
         self.assertIn(b"please submit your credentials to log in", response.data)
 
     def test_login_errthang_fine(self):
-        signup          = self.post('/register', self.numa)
+        signup          = self.post('/api/companies', self.numa)
         login_response  = self.post('/login', self.login_creds)
 
         with self.app.session_transaction() as sess:
@@ -115,7 +115,7 @@ class TestCase(unittest.TestCase):
             self.assertIn("please log in", str(login_response.data))
 
     def test_login_incorrect_password(self):
-        signup              = self.post('/register', self.numa)
+        signup              = self.post('/api/companies', self.numa)
         login_response      = self.post('/login', self.login_wrongpw)
         json_login_response = self.decode_json(login_response.data)
         self.assertEqual(login_response.status_code, 401)
@@ -123,7 +123,7 @@ class TestCase(unittest.TestCase):
         self.assertIn("The password you provided is incorrect", json_login_response['error'])
 
     def test_login_incorrect_username(self):
-        signup          = self.post('/register', self.numa)
+        signup          = self.post('/api/companies', self.numa)
         login_response  = self.post('/login', self.login_wrong_user)
         json_response   = self.decode_json(login_response.data)
         self.assertEqual(login_response.status_code, 401)
@@ -131,7 +131,7 @@ class TestCase(unittest.TestCase):
         self.assertIn("No company is registered using this email address", json_response['error'])
 
     def test_logout(self):
-        signup          = self.post('/register', self.numa)
+        signup          = self.post('/api/companies', self.numa)
         login           = self.post('/login', self.login_creds)
         logout          = self.app.get('/logout', follow_redirects=True)
         with self.app.session_transaction() as session:
@@ -145,20 +145,20 @@ class TestCase(unittest.TestCase):
         self.assertEqual(200, companies.status_code)
 
     def test_get_company(self):
-        signup = self.post('/register', self.numa)
+        signup = self.post('/api/companies', self.numa)
         company = self.app.get(signup.headers['location'])
         json_response = self.decode_json(company.data)
         self.assertIn('company', json_response)
         self.assertTrue(200, company.status_code)
 
     def test_publish_job_unauthorised(self):
-        signup = self.post('/register', self.numa)
+        signup = self.post('/api/companies', self.numa)
         post_job = self.post('/api/jobs', self.numa_job)
         self.assertEqual(403, post_job.status_code)
         self.assertIn('/login', post_job.headers['Location'])
 
     def test_publish_job_logged_in(self):
-        signup = self.post('/register', self.numa)
+        signup = self.post('/api/companies', self.numa)
         login  = self.post('/login', self.login_creds)
         post_job = self.post('/api/jobs', self.numa_job)
         self.assertTrue(201, post_job.status_code)
@@ -166,7 +166,7 @@ class TestCase(unittest.TestCase):
 
 
     def test_publish_job_missing_fields(self):
-        signup = self.post('/register', self.numa)
+        signup = self.post('/api/companies', self.numa)
         login  = self.post('/login', self.login_creds)
         post_job = self.post('/api/jobs', self.numa_job_missing_fields)
         post_job_response = self.decode_json(post_job.data)
@@ -174,7 +174,7 @@ class TestCase(unittest.TestCase):
         self.assertEqual("Incomplete request, Missing required fields.",post_job_response['error'])
 
     def test_get_all_jobs(self):
-        signup = self.post('/register', self.numa)
+        signup = self.post('/api/companies', self.numa)
         login  = self.post('/login', self.login_creds)
         post_job = self.post('/api/jobs', self.numa_job)
         post_job2 = self.post('/api/jobs', self.numa_job)
@@ -183,14 +183,14 @@ class TestCase(unittest.TestCase):
         self.assertIn('jobs', self.decode_json(jobs.data))
 
     def test_get_job(self):
-        signup = self.post('/register', self.numa)
+        signup = self.post('/api/companies', self.numa)
         login  = self.post('/login', self.login_creds)
         post_job = self.post('/api/jobs', self.numa_job)
         job = self.app.get(post_job.headers['Location'])
         self.assertEqual(200, job.status_code)
 
     def test_get_company_jobs(self):
-        signup = self.post('/register', self.numa)
+        signup = self.post('/api/companies', self.numa)
         company = self.app.get(signup.headers['Location'])
         company_json = self.decode_json(company.data)
         login  = self.post('/login', self.login_creds)
@@ -203,14 +203,14 @@ class TestCase(unittest.TestCase):
         self.assertIn('jobs', company_list_json)
 
     def test_get_job_correct_contract_type(self):
-        signup = self.post('/register', self.numa)
+        signup = self.post('/api/companies', self.numa)
         login  = self.post('/login', self.login_creds)
         post_job = self.post('/api/jobs', self.numa_job)
         get_jobs_type = self.app.get('/api/jobs/full-time')
         self.assertEqual(200, get_jobs_type.status_code)
 
     def test_get_jobs_invalid_contract_type(self):
-        signup = self.post('/register', self.numa)
+        signup = self.post('/api/companies', self.numa)
         login  = self.post('/login', self.login_creds)
         post_job = self.post('/api/jobs', self.numa_job)
         get_jobs_type = self.app.get('/api/jobs/solidsnakebitch')

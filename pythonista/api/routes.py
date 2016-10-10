@@ -9,6 +9,12 @@ api = Blueprint('api', __name__)
 def companies():
     return get_companies()
 
+@api.route('/companies', methods=['POST'])
+@serialise_json
+def register():
+    form = request.get_json()
+    return register_company(form)
+
 @api.route('/companies/<int:company_id>', methods=['GET'])
 @serialise_json
 def company(company_id):
