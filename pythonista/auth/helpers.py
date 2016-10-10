@@ -3,6 +3,31 @@ from ..helpers import *
 from ..models import Company
 from sqlalchemy.exc import IntegrityError
 
+def logout_company():
+    return logout_successful()
+
+def wrong_password():
+    return 401, {"error": "The password you provided is incorrect", "status_code": 401}, {}
+
+def email_already_registered():
+    return 409, {"error": "A company is already registered using this email", "status_code": 409}, {}
+
+def wrong_email():
+    return 401, {"error": "No company is registered using this email address", "status_code": 401}, {}
+
+def incomplete_request(missing_fields=None):
+    return 409, {"error": "Incomplete request, Missing required fields.", "status_code": 409,\
+                 "missing_fields": missing_fields}, {}
+
+def unauthorised():
+    return 403, {"error": "Unauthorised", "status_code": 403}, {"Location": url_for('auth.login')}
+
+def bad_request(reason=None):
+    return 400, {"error": "Something went wrong", "status_code": 400, "reason": reason}, {}
+
+def not_found():
+    return 404, {"error": "Not found", "status_code": 404}, {}
+
 def register_company(payload):
 
     try:
@@ -34,5 +59,3 @@ def login_company(payload):
     else:
         return wrong_email()
 
-def logout_company():
-    return logout_successful()
