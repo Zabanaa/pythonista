@@ -30,9 +30,6 @@ def unauthorised():
 def bad_request(reason=None):
     return 400, {"error": "Something went wrong", "status_code": 400, "reason": reason}, {}
 
-def not_found():
-    return 404, {"error": "Not found", "status_code": 404}, {}
-
 def login_company(payload):
 
     email, password = (payload['email'], payload['password'])

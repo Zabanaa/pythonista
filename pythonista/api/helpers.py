@@ -1,4 +1,4 @@
-from ..errors import get_missing_fields, incomplete_request, email_already_registered
+from ..errors import get_missing_fields, incomplete_request, email_already_registered, not_found
 from pythonista.models import *
 from sqlalchemy.exc import IntegrityError
 from pythonista import db
