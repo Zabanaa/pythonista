@@ -1,7 +1,15 @@
 from pythonista import db
-from ..helpers import *
+from flask import session, url_for
 from ..models import Company
 from sqlalchemy.exc import IntegrityError
+
+def login_successful(company_email=None):
+    session['company'] = company_email
+    return 302, {"message": "Login successful"}, {"Location": url_for('index')}
+
+def logout_successful():
+    session.clear()
+    return 302, {"message": "You have been logged out"}, {"Location": url_for('index')}
 
 def logout_company():
     return logout_successful()
