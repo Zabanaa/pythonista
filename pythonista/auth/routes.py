@@ -1,5 +1,6 @@
 from flask import Blueprint
 from .helpers import *
+from ..errors import *
 from ..decorators import *
 
 auth = Blueprint('auth', __name__)

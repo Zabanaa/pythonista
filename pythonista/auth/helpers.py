@@ -67,3 +67,17 @@ def login_company(payload):
     else:
         return wrong_email()
 
+def get_missing_fields(response_body):
+
+    '''
+    Accepts a dict containing the payload.
+    Loops through that dict
+    Appends the keys with a value of None to a list
+    returns that list
+    '''
+
+    missing_fields = []
+    for key, value in response_body.items():
+        if response_body[key] == None:
+            missing_fields.append(key)
+    return missing_fields
