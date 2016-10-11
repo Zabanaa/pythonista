@@ -33,7 +33,7 @@ class TestCase(unittest.TestCase):
         "tags": "arsenal, fuck koscielny",
         "description": "Stop scoring own goals",
         "salary_range": "98000 - 123000 ",
-        "contract_type": "full_time",
+        "contract_type": "full-time",
         "company_id": 1
     }
 
@@ -60,6 +60,10 @@ class TestCase(unittest.TestCase):
                                  follow_redirects=True)
         return response
 
+    def put(self, endpoint, payload):
+        response = self.app.put(endpoint, data=json.dumps(payload), content_type="application/json", \
+                                follow_redirects=True)
+        return response
     # ========= Test methods ======== #
 
     def test_get_index_works(self):
@@ -218,6 +222,25 @@ class TestCase(unittest.TestCase):
         self.assertEqual(404, get_jobs_type.status_code)
         self.assertEqual("Invalid contract type", get_jobs_type_response['error'])
 
+    def test_update_job(self):
+        signup = self.post('/api/companies', self.numa)
+        login  = self.post('/login', self.login_creds)
+        post_job = self.post('/api/jobs', self.numa_job)
+        job_id_url = post_job.headers['Location']
+        update_job = self.put(job_id_url, self.numa_job2)
+        self.assertEqual(200, update_job.status_code)
+        self.assertIn("job", self.decode_json(update_job.data))
+
+    def test_update_job_unauthorised(self):
+        signup = self.post('/api/companies', self.numa)
+        login  = self.post('/login', self.login_creds)
+        post_job = self.post('/api/jobs', self.numa_job)
+        job_url = post_job.headers['Location']
+        with self.app.session_transaction() as session:
+            session.clear()
+        update_job = self.put(job_url, self.numa_job2)
+        self.assertEqual(403, update_job.status_code)
+        self.assertEqual("Unauthorised", self.decode_json(update_job.data)['error'])
 
 if __name__ == "__main__":
     unittest.main()
