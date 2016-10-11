@@ -44,6 +44,7 @@ def job(job_id):
 
 @api.route('/jobs/<int:job_id>', methods=['PUT'])
 @serialise_json
+@login_required
 def modify_job(job_id):
     form = request.get_json()
     return update_job(job_id, form)
