@@ -42,6 +42,12 @@ def jobs():
 def job(job_id):
     return get_job(job_id)
 
+@api.route('/jobs/<int:job_id>', methods=['PUT'])
+@serialise_json
+def modify_job(job_id):
+    form = request.get_json()
+    return update_job(job_id, form)
+
 @api.route('/jobs/<string:contract_type>', methods=['GET'])
 @serialise_json
 def job_type(contract_type):
