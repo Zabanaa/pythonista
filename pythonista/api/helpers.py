@@ -72,3 +72,17 @@ def get_job_type(contract_type):
         jobs = [job.serialise() for job in Job.query.filter_by(contract_type=contract_type).all()]
         return 200, {"status_code": 200, "contract_type": contract_type, "results": jobs}, {}
 
+def update_job(job_id, payload):
+
+    job = Job.query.filter_by(id=job_id).first()
+
+    if job is not None:
+        for key, value in payload.items():
+            if key is not 'id' and key is not 'company_id':
+                setattr(job, key, value)
+
+        db.session.commit()
+        return 200, {"message": "sucessfully updated", "job": job.serialise()}, {} # Returns a 200 response along with a nice message
+
+    else:
+        return not_found() # 404 bitch
