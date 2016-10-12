@@ -20,6 +20,12 @@ def register():
 def company(company_id):
     return get_company(company_id)
 
+@api.route('/companies/<int:company_id>', methods=['PUT'])
+@serialise_json
+def modify_company(company_id):
+    form = request.get_json()
+    return update_company(company_id, form)
+
 @api.route('/companies/<int:company_id>/jobs', methods=['GET'])
 @serialise_json
 def company_jobs(company_id):
