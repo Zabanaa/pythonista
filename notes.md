@@ -31,7 +31,6 @@ How to handle the updating of users profiles
 
 API
 ------------------------------
-PUT    /api/jobs/id                        Protected - Return edited resource
 DELETE /api/jobs/id/                       Protected 
 PUT    /api/companies/id/                  Protected - Return edited resource 
 
@@ -39,6 +38,7 @@ DONE
 -----------------------------
 
 GET    /api/jobs/id/                       
+PUT    /api/jobs/id                        Protected
 GET    /api/jobs/                     
 POST   /api/jobs/                          Protected 
 GET    /api/jobs/contract-type
