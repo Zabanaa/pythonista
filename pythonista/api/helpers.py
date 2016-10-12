@@ -19,6 +19,7 @@ def update_company(company_id, payload):
         for key, value in payload.items():
             setattr(company, key, value)
         db.session.commit()
+        return 200, {"status_code": 200, "message": "Profile updated sucessfully", "company": company.serialise()}, {}
     else:
         return not_found()
 
