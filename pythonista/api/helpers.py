@@ -13,6 +13,15 @@ def get_company(company_id):
         return not_found()
     return 200, {"status_code": 200, "company": company.serialise()}, {}
 
+def update_company(company_id, payload):
+    company = Company.query.filter_by(id=company_id).first()
+    if company is not None:
+        for key, value in payload.items():
+            setattr(company, key, value)
+        db.session.commit()
+    else:
+        return not_found()
+
 def get_company_jobs(company_id):
     company = Company.query.filter_by(id=company_id).first()
     if company is not None:
@@ -97,6 +106,4 @@ def remove_job(job_id):
         return 200, {"status_code": 200, "message": "Job deleted sucessfully"}, {}
     else:
         return not_found()
-
-
 
