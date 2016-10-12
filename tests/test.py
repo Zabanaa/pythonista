@@ -38,6 +38,7 @@ class TestCase(unittest.TestCase):
     }
 
     numa_missing_fields = {"name": numa['name'], "bio": numa['bio']}
+    numa_updated_profile = {"name": "braaaah"}
     numa_job_missing_fields = {"title": "striker", "salary_range": "23400 - 39400"}
     login_creds = {"email": numa['email'], "password": numa['password']}
     login_wrongpw = {"email": numa['email'], "password": "kehwleq"}
@@ -264,6 +265,14 @@ class TestCase(unittest.TestCase):
         self.assertEqual(403, delete_job.status_code)
         self.assertEqual("Unauthorised", self.decode_json(delete_job.data)['error'])
 
+    def test_update_company_profile(self):
+        signup = self.post('/api/companies', self.numa)
+        company_url = signup.headers['Location']
+        login  = self.post('/login', self.login_creds)
+        update_profile = self.put(company_url, self.numa_updated_profile)
+        update_profile_json = self.decode_json(update_profile.data)
+        self.assertEqual(200, update_profile.status_code)
+        self.assertIn('updated sucessfully', update_profile_json['message'])
 
 if __name__ == "__main__":
     unittest.main()
