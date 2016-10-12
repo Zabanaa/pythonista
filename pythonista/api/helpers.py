@@ -86,3 +86,17 @@ def update_job(job_id, payload):
 
     else:
         return not_found() # 404 bitch
+
+
+def remove_job(job_id):
+
+    job = Job.query.filter_by(id=job_id).first()
+    if job is not None:
+        db.session.delete(job)
+        db.session.commit()
+        return 200, {"status_code": 200, "message": "Job deleted sucessfully"}, {}
+    else:
+        return not_found()
+
+
+
