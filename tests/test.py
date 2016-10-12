@@ -242,5 +242,28 @@ class TestCase(unittest.TestCase):
         self.assertEqual(403, update_job.status_code)
         self.assertEqual("Unauthorised", self.decode_json(update_job.data)['error'])
 
+    def test_delete_job(self):
+        signup = self.post('/api/companies', self.numa)
+        login  = self.post('/login', self.login_creds)
+        post_job  = self.post('/api/jobs', self.numa_job)
+        job_url = post_job.headers['Location']
+        post_job2  = self.post('/api/jobs', self.numa_job2)
+        delete_job = self.app.delete(job_url)
+        delete_job_json = self.decode_json(delete_job.data)
+        self.assertEqual(200, delete_job.status_code)
+        self.assertIn("Job deleted", delete_job_json['message'])
+
+    def test_delete_job_unauthorised(self):
+        signup = self.post('/api/companies', self.numa)
+        login  = self.post('/login', self.login_creds)
+        post_job  = self.post('/api/jobs', self.numa_job)
+        job_url = post_job.headers['Location']
+        with self.app.session_transaction() as session:
+            session.clear()
+        delete_job = self.app.delete(job_url)
+        self.assertEqual(403, delete_job.status_code)
+        self.assertEqual("Unauthorised", self.decode_json(delete_job.data)['error'])
+
+
 if __name__ == "__main__":
     unittest.main()
