@@ -17,6 +17,7 @@ class Company(db.Model):
     bio         = db.Column(db.Text(), nullable=True)
     total_staff = db.Column(db.Integer, nullable=True)
     total_jobs  = db.relationship('Job', backref='company', lazy='dynamic')
+    confirmed   = db.Column(db.Boolean, nullable=False, default=False)
 
     def __init__(self, dictionary):
         for key, value in dictionary.items():
