@@ -35,6 +35,7 @@ def register_company(payload):
 
     try:
         new_company = Company(payload)
+        new_company.confirmed = False
         db.session.add(new_company)
         db.session.commit()
         return 201, {"status_code": 201, "message" : "Registration successful"},{"Location": new_company.get_url()}
