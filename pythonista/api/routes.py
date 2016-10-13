@@ -22,6 +22,7 @@ def company(company_id):
 
 @api.route('/companies/<int:company_id>', methods=['PUT'])
 @serialise_json
+@login_required
 def modify_company(company_id):
     form = request.get_json()
     return update_company(company_id, form)
