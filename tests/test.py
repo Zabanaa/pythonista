@@ -274,5 +274,16 @@ class TestCase(unittest.TestCase):
         self.assertEqual(200, update_profile.status_code)
         self.assertIn('updated sucessfully', update_profile_json['message'])
 
+    def test_update_company_unauthorised(self):
+        signup = self.post('/api/companies', self.numa)
+        company_url = signup.headers['Location']
+        login  = self.post('/login', self.login_creds)
+        with self.app.session_transaction() as session:
+            session.clear()
+        update_profile = self.put(company_url, self.numa_updated_profile)
+        update_profile_json = self.decode_json(update_profile.data)
+        self.assertEqual(403, update_profile.status_code)
+        self.assertIn('Unauthorised', update_profile_json['error'])
+
 if __name__ == "__main__":
     unittest.main()
