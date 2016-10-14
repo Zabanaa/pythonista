@@ -1,7 +1,9 @@
 from ..errors import get_missing_fields, incomplete_request, email_already_registered, not_found
 from pythonista.models import *
 from sqlalchemy.exc import IntegrityError
-from pythonista import db
+from pythonista import app,db
+from itsdangerous import URLSafeTimedSerializer
+from flask import url_for
 
 def get_companies():
     companies = [company.serialise() for company in Company.query.all()]
@@ -31,14 +33,53 @@ def get_company_jobs(company_id):
     else:
         return not_found()
 
+def generate_confirmation_token(email):
+    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+    return serializer.dumps(email, salt=app.config['SECURITY_PASSWORD_SALT'])
+
+def confirm_token(token):
+    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+    try:
+        email = serializer.loads(
+            token,
+            salt=app.config['SECURITY_PASSWORD_SALT']
+        )
+    except:
+        return False
+    return email
+
+def confirm_email(token):
+    try:
+        email = confirm_token(token)
+    except:
+        return 409, {"status_code": 409, "error": "Invalid token"}, {}
+
+    company = Company.query.filter_by(email=email).first()
+
+    if company is not None:
+
+        if company.confirmed:
+            return 200, {"status_code": 200, "message": "Account already confirmed, please login"},\
+            {"Location": url_for('login')}
+        else:
+            company.confirmed = True
+            db.session.add(company)
+            db.session.commit()
+            return 200, {"status_code": 200, "message": "Your account is now confirmed ! You can log in"},\
+            {"Location": url_for('login')}
+    else:
+        return not_found()
+
 def register_company(payload):
 
     try:
-        new_company = Company(payload)
-        new_company.confirmed = False
-        db.session.add(new_company)
+        company = Company(payload)
+        company.confirmed = False
+        db.session.add(company)
         db.session.commit()
-        return 201, {"status_code": 201, "message" : "Registration successful"},{"Location": new_company.get_url()}
+        token = generate_confirmation_token(company.email)
+        return 201, {"status_code": 201, "message" : "Registration successful"},{"Location": company.get_url()}
+
     except IntegrityError as e:
         cause_of_error = str(e.__dict__['orig'])
         if "violates unique constraint" in cause_of_error:
