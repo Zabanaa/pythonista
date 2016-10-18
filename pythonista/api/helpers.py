@@ -1,7 +1,7 @@
-from ..errors import get_missing_fields, incomplete_request, email_already_registered, not_found
+from ..errors import get_missing_fields, incomplete_request, email_already_registered, not_found, invalid_token
 from pythonista.models import *
 from sqlalchemy.exc import IntegrityError
-from itsdangerous import URLSafeTimedSerializer
+from itsdangerous import URLSafeSerializer
 from flask import url_for, render_template
 from flask_mail import Message, Mail
 from pythonista import *
@@ -34,51 +34,21 @@ def get_company_jobs(company_id):
     else:
         return not_found()
 
-def generate_confirmation_token(email):
-    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-    return serializer.dumps(email, salt=app.config['SECURITY_PASSWORD_SALT'])
-
-def confirm_token(token):
-    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-    try:
-        email = serializer.loads(
-            token,
-            salt=app.config['SECURITY_PASSWORD_SALT']
-        )
-    except:
-        return False
-    return email
+def generate_token(email):
+    serializer = URLSafeSerializer('secret')
+    token = serializer.dumps(email)
+    return token
 
 def confirm_email(token):
+    serializer = URLSafeSerializer('secret')
     try:
-        email = confirm_token(token)
+        email = serializer.loads(token)
     except:
-        return invalid_token() 
+        return invalid_token()
 
     company = Company.query.filter_by(email=email).first()
 
-    if company is not None:
-
-        if company.confirmed:
-            return 200, {"status_code": 200, "message": "Account already confirmed, please login"},\
-            {"Location": url_for('login')}
-        else:
-            company.confirmed = True
-            db.session.add(company)
-            db.session.commit()
-            return 200, {"status_code": 200, "message": "Your account is now confirmed ! You can log in"},\
-            {"Location": url_for('login')}
-    else:
-        return not_found()
-
-def send_email(to, subject, template):
-    msg = Message(
-        subject,
-        recipients=[to],
-        html=template,
-        sender=app.config['MAIL_DEFAULT_SENDER']
-    )
-    mail.send(msg)
+    return str(email)
 
 def register_company(payload):
 
@@ -87,11 +57,8 @@ def register_company(payload):
         company.confirmed = False
         db.session.add(company)
         db.session.commit()
-        token = generate_confirmation_token(company.email)
-        confirm_url = url_for('api.confirm_registration', token=token, _external=True)
-        email_body = render_template('api/email.html', confirm_url=confirm_url)
-        subject = "Please confirm your registration"
-        send_email(company.email, subject, email_body)
+        token = generate_token(company.email)
+        print(token)
         return 201, {"status_code": 201, "message" : "Registration successful"},{"Location": company.get_url()}
 
     except IntegrityError as e:
