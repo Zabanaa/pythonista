@@ -2,7 +2,12 @@ from flask import Blueprint, request
 from .helpers import *
 from ..decorators import serialise_json, login_required
 
-api = Blueprint('api', __name__)
+api = Blueprint('api', __name__, template_folder="pages")
+
+@api.route('/confim/<token>', methods=['GET'])
+def confirm_registration(token):
+    return confirm_email(token)
+
 
 @api.route('/companies', methods=['GET'])
 @serialise_json
