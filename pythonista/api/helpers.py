@@ -1,9 +1,10 @@
 from ..errors import get_missing_fields, incomplete_request, email_already_registered, not_found
 from pythonista.models import *
 from sqlalchemy.exc import IntegrityError
-from pythonista import app,db
 from itsdangerous import URLSafeTimedSerializer
-from flask import url_for
+from flask import url_for, render_template
+from flask_mail import Message, Mail
+from pythonista import *
 
 def get_companies():
     companies = [company.serialise() for company in Company.query.all()]
@@ -52,7 +53,7 @@ def confirm_email(token):
     try:
         email = confirm_token(token)
     except:
-        return 409, {"status_code": 409, "error": "Invalid token"}, {}
+        return invalid_token() 
 
     company = Company.query.filter_by(email=email).first()
 
@@ -70,6 +71,15 @@ def confirm_email(token):
     else:
         return not_found()
 
+def send_email(to, subject, template):
+    msg = Message(
+        subject,
+        recipients=[to],
+        html=template,
+        sender=app.config['MAIL_DEFAULT_SENDER']
+    )
+    mail.send(msg)
+
 def register_company(payload):
 
     try:
@@ -78,6 +88,10 @@ def register_company(payload):
         db.session.add(company)
         db.session.commit()
         token = generate_confirmation_token(company.email)
+        confirm_url = url_for('api.confirm_registration', token=token, _external=True)
+        email_body = render_template('api/email.html', confirm_url=confirm_url)
+        subject = "Please confirm your registration"
+        send_email(company.email, subject, email_body)
         return 201, {"status_code": 201, "message" : "Registration successful"},{"Location": company.get_url()}
 
     except IntegrityError as e:
@@ -138,7 +152,6 @@ def update_job(job_id, payload):
 
     else:
         return not_found() # 404 bitch
-
 
 def remove_job(job_id):
 
