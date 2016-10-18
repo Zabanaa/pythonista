@@ -47,8 +47,20 @@ def confirm_email(token):
         return invalid_token()
 
     company = Company.query.filter_by(email=email).first()
-
+    # If company is not none
+        # If company is confirmed
+            # Bruv whuyu doin ?
+            # Just go back to index
+        # if it's not
+            # confirm their account
+            # update db record
+            # send nice response
     return str(email)
+
+# send_email helper
+# Takes a recipient, a subject line and a template
+# create the message
+# send it
 
 def register_company(payload):
 
@@ -58,6 +70,10 @@ def register_company(payload):
         db.session.add(company)
         db.session.commit()
         token = generate_token(company.email)
+        # Create confirm email url
+        # Load the template
+        # Create the subject line
+        # Send the effin thing init
         print(token)
         return 201, {"status_code": 201, "message" : "Registration successful"},{"Location": company.get_url()}
 
