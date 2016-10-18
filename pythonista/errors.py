@@ -12,6 +12,9 @@ def bad_request(reason=None):
 def not_found():
     return 404, {"error": "Not found", "status_code": 404}, {}
 
+def invalid_token():
+    return 404, {"error": "Invalid Token", "status_code": 404}, {}
+
 def get_missing_fields(response_body):
 
     '''
