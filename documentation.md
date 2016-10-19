@@ -11,6 +11,8 @@ the pythonista package
 
 - Create a reset password functionality
 - Create a front end using a framework of your choice
+- Refactor the tests 
+- Test email confirmation functionality 
 
 # Here are all the authentication and api endpoints
 
