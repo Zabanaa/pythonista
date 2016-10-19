@@ -13,7 +13,8 @@ the pythonista package
 - Create a front end using a framework of your choice
 - Refactor the tests 
 - Test email confirmation functionality 
-- Decorate /api/confirm/token with login required
+- Decorate /api/confirm/token with ogin required
+- Refactor serialise_json decorator
 
 ## Here are all the authentication and api endpoints
 
