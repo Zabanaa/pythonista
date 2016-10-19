@@ -24,9 +24,6 @@ All helper functions and methods are commented
 Tests are run using the unittest standard library (feel free to use the tool of your
 choice)
 
-
-
-
-
-
-
+## Next features to implement
+- Profile images for companies
+- Allow users to apply within the site
