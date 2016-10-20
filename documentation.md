@@ -6,6 +6,10 @@ ocean article)
 the pythonista package
 # then all you have to do is sudo start pythonista, and the server should be running
 # then visit whatever url your server is configured on and you should see the site
+# To run the unittests just call python manage.py test
+# To run the migrations you first need to initiate the process by calling 
+python manage.py db init, then run the migrations by calling `python manage.py db migrate`
+and finally to update everything just run `python manage.py db upgrade`
 
 ## here is what is left to do on the project
 
