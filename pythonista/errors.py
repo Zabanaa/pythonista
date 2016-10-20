@@ -7,13 +7,13 @@ def incomplete_request(missing_fields=None):
     '''
     return 409, {"error": "Incomplete request, Missing required fields.", "status_code": 409,\
                     "missing_fields": missing_fields}, {}
-def unauthorised():
+def forbidden():
 
     '''
-        Returns a 403 Unauthorised along with a url to the login page in the location header.
+        Returns a 403 Forbidden along with a url to the login page in the location header.
     '''
 
-    return 403, {"error": "Unauthorised", "status_code": 403}, {"Location": url_for('auth.login')}
+    return 403, {"error": "Forbidden", "status_code": 403}, {"Location": url_for('auth.login')}
 
 def bad_request(reason=None):
 
