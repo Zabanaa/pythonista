@@ -23,6 +23,28 @@ and finally to update everything just run `python manage.py db upgrade`
 
 ## Here are all the authentication and api endpoints
 
+Auth 
+-----------
+
+/register GET 
+/login    GET 
+/login    POST 
+/logout   POST 
+
+API
+------------
+/api/companies              GET
+/api/companies              POST
+/api/companies/id           GET 
+/api/companies/id           PUT
+/api/companies/id/jobs      GET 
+/api/jobs                   GET
+/api/jobs                   POST
+/api/jobs/id                GET
+/api/jobs/id                PUT
+/api/jobs/<contract_type>   GET 
+*contract types include full-time / part-time / internship / contract / remote*
+
 ## Other notes
 
 All helper functions and methods are commented 
