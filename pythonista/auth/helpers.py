@@ -54,10 +54,9 @@ def login_company(payload):
     company = Company.query.filter_by(email=email).first()
 
     if company is not None:
-        if company.confirmed:
-            if company.verify_password(password) == True:
-                return login_successful(company_email=company.email)
-            else:
-                return wrong_password()
+        if company.verify_password(password) == True:
+            return login_successful(company_email=company.email)
+        else:
+            return wrong_password()
     else:
         return wrong_email()
