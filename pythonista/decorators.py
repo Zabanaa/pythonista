@@ -20,7 +20,7 @@ def login_required(f):
             if session['company'] == company.email:
                 return f(*args, **kwargs)
         else:
-            return unauthorised()
+            return forbidden()
     return wrapped
 
 # Serialise Json
