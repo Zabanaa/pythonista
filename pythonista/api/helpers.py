@@ -10,16 +10,33 @@ from pythonista import app, db, mail
 email_key = "\x18\xb2\x98\"C\x0b\xae\x98\x10\x8bQ/\x8e\xf0\xee\x95\xc8\xce2\xce\xd1\x15\'\xa7"
 
 def get_companies():
+    '''
+        Returns a list of all the companies registered in the database.
+    '''
     companies = [company.serialise() for company in Company.query.all()]
     return 200, {"status_code": 200, "companies": companies}, {}
 
 def get_company(company_id):
+    '''
+       Takes an id as a parameter.
+       Returns a company instance based on the id or a 404 not found
+       if there's no match.
+    '''
     company = Company.query.filter_by(id=company_id).first()
     if company is None:
         return not_found()
     return 200, {"status_code": 200, "company": company.serialise()}, {}
 
 def update_company(company_id, payload):
+   '''
+        Takes an id and a JSON object (in the form of a dict)
+        Fetches the corresponding company instance
+        Loops through the payload dictionary and updates the instance
+        Commits the changes to the DB
+        And returns a 200
+        If the company does not exists, the function will return a 404
+   '''
+
     company = Company.query.filter_by(id=company_id).first()
     if company is not None:
         for key, value in payload.items():
@@ -30,6 +47,10 @@ def update_company(company_id, payload):
         return not_found()
 
 def get_company_jobs(company_id):
+    '''
+        Takes an id, fetches the corresponding company (or 404)
+        Then returns all the jobs for that company.
+    '''
     company = Company.query.filter_by(id=company_id).first()
     if company is not None:
         jobs = [job.serialise() for job in Job.query.filter_by(company_id=company_id).all()]
@@ -38,11 +59,27 @@ def get_company_jobs(company_id):
         return not_found()
 
 def generate_token(email):
+    '''
+        Takes an email address
+        Will return a URLSafe token to be sent in a confirmation email
+        The URLSafeSerializer function will store the email in the token
+    '''
     serializer = URLSafeSerializer(email_key)
     token = serializer.dumps(email)
     return token
 
 def confirm_email(token):
+    '''
+        Takes the token generated above loads it, decrypts it, and returns the email
+        If the token does not match we return a 404
+        If the token matches, we lookup the company by their email
+        We then check if the company exists in the DB
+        If they do, we check if they are confirmed, in which case we send them a message along with a
+        redirection url in the location header.
+        If they are not confirmed we then set the confirmed attribute to True
+        update the db and send a 200 with a redirection url in the location header
+
+    '''
     serializer = URLSafeSerializer(email_key)
     try:
         email = serializer.loads(token)
@@ -64,8 +101,11 @@ def confirm_email(token):
     else:
         return not_found()
 
-# send_email helper
 def send_email(to, subject_line, body):
+    '''
+        Takes a recipient email, a subject line and a body
+        Send the email
+    '''
     message = Message(
         sender=("Karim Cheurfi", app.config['MAIL_DEFAULT_SENDER']),
         subject=subject_line,
@@ -75,6 +115,16 @@ def send_email(to, subject_line, body):
     mail.send(message)
 
 def register_company(payload):
+
+    '''
+        Takes the JSON payload from the client (in the form of a dict)
+        We try to create a new Company instance by passing it the payload
+        We save the instance to the db
+        We generate a token, a confirmation url, a subject line. We load the html email template.
+        We send the email and return a 201 along with the location of that resource in the location header
+
+        If an exception is thrown (usually an integrity error) we deal with it accordingly
+    '''
 
     try:
         company = Company(payload)
@@ -100,6 +150,13 @@ def register_company(payload):
 
 def publish_job(payload):
 
+    '''
+        Takes a JSON payload in the form of a dict
+        We try to create a new Job instance passing it the payload
+        We save it to the db and return a 201
+        If an exception is thrown, we deal with it accordingly
+    '''
+
     try:
         new_job = Job(payload)
         db.session.add(new_job)
@@ -114,16 +171,29 @@ def publish_job(payload):
             return bad_request()
 
 def get_jobs():
+    '''
+        Returns a list of all the jobs saved in the DB
+    '''
     jobs = [job.serialise() for job in Job.query.all()]
     return 200, {"status_code": 200, "jobs":  jobs}, {}
 
 def get_job(job_id):
+    '''
+        Takes an id, returns a job based on that id
+        or a 404 if there's no match
+    '''
     job = Job.query.filter_by(id=job_id).first()
     if job is None:
         return not_found()
     return 200, {"status_code": 200, "job": job.serialise()}, {}
 
 def get_job_type(contract_type):
+
+    '''
+        Takes a string as a parameter. Looks in the db and returns all jobs corresponding to that contract_type
+        if the contract_type passed in is not in the default possible options, we return a 404.
+    '''
+
     valid_contract_types = [contract[0] for contract in Job.CONTRACTS]
 
     if contract_type not in valid_contract_types:
@@ -134,6 +204,13 @@ def get_job_type(contract_type):
 
 def update_job(job_id, payload):
 
+    '''
+        Takes an id and a JSON payload in the form of a dict.
+        Check if theres is a corresponding job (using the id)
+        Loops through the payload and updates the instance
+        If there's no match we return a 404
+    '''
+
     job = Job.query.filter_by(id=job_id).first()
 
     if job is not None:
@@ -142,12 +219,18 @@ def update_job(job_id, payload):
                 setattr(job, key, value)
 
         db.session.commit()
-        return 200, {"message": "sucessfully updated", "job": job.serialise()}, {} # Returns a 200 response along with a nice message
+        return 200, {"message": "sucessfully updated", "job": job.serialise()}, {}
 
     else:
-        return not_found() # 404 bitch
+        return not_found()
 
 def remove_job(job_id):
+
+    '''
+        Takes an id. Fetches the corresponding job
+        If it exists, we delete it and update the DB
+        Else we just return a 404 not found
+    '''
 
     job = Job.query.filter_by(id=job_id).first()
     if job is not None:
