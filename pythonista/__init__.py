@@ -16,4 +16,8 @@ app.register_blueprint(auth)
 
 @app.route('/')
 def index():
+    '''
+        Controller for the index page, will eventually return a static html page
+        for things like angular, react etc
+    '''
     return "Hello, please log in", 200
