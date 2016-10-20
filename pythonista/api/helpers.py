@@ -28,15 +28,14 @@ def get_company(company_id):
     return 200, {"status_code": 200, "company": company.serialise()}, {}
 
 def update_company(company_id, payload):
-   '''
+    '''
         Takes an id and a JSON object (in the form of a dict)
         Fetches the corresponding company instance
         Loops through the payload dictionary and updates the instance
         Commits the changes to the DB
         And returns a 200
         If the company does not exists, the function will return a 404
-   '''
-
+    '''
     company = Company.query.filter_by(id=company_id).first()
     if company is not None:
         for key, value in payload.items():
@@ -135,7 +134,7 @@ def register_company(payload):
         confirm_url = url_for('api.confirm_registration', token=token, _external=True)
         email_body = render_template('api/email.html', confirm_url=confirm_url)
         subject_line = "Please confirm your account"
-        send_email(company.email, subject_line, email_body)
+        #send_email(company.email, subject_line, email_body)
         return 201, {"status_code": 201, "message" : "Registration successful"},{"Location": company.get_url()}
 
     except IntegrityError as e:
