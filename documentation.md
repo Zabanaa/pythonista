@@ -19,6 +19,7 @@ and finally to update everything just run `python manage.py db upgrade`
 - Test email confirmation functionality 
 - Decorate /api/confirm/token with ogin required
 - Refactor serialise_json decorator
+- Check that the company (user) is confirmed before letting them log in
 
 ## Here are all the authentication and api endpoints
 
