@@ -156,7 +156,7 @@ class TestCase(unittest.TestCase):
         self.assertIn('company', json_response)
         self.assertTrue(200, company.status_code)
 
-    def test_publish_job_unauthorised(self):
+    def test_publish_job_forbidden(self):
         signup = self.post('/api/companies', self.numa)
         post_job = self.post('/api/jobs', self.numa_job)
         self.assertEqual(403, post_job.status_code)
@@ -232,7 +232,7 @@ class TestCase(unittest.TestCase):
         self.assertEqual(200, update_job.status_code)
         self.assertIn("job", self.decode_json(update_job.data))
 
-    def test_update_job_unauthorised(self):
+    def test_update_job_forbidden(self):
         signup = self.post('/api/companies', self.numa)
         login  = self.post('/login', self.login_creds)
         post_job = self.post('/api/jobs', self.numa_job)
@@ -241,7 +241,7 @@ class TestCase(unittest.TestCase):
             session.clear()
         update_job = self.put(job_url, self.numa_job2)
         self.assertEqual(403, update_job.status_code)
-        self.assertEqual("Unauthorised", self.decode_json(update_job.data)['error'])
+        self.assertEqual("Forbidden", self.decode_json(update_job.data)['error'])
 
     def test_delete_job(self):
         signup = self.post('/api/companies', self.numa)
@@ -254,7 +254,7 @@ class TestCase(unittest.TestCase):
         self.assertEqual(200, delete_job.status_code)
         self.assertIn("Job deleted", delete_job_json['message'])
 
-    def test_delete_job_unauthorised(self):
+    def test_delete_job_forbidden(self):
         signup = self.post('/api/companies', self.numa)
         login  = self.post('/login', self.login_creds)
         post_job  = self.post('/api/jobs', self.numa_job)
@@ -263,7 +263,7 @@ class TestCase(unittest.TestCase):
             session.clear()
         delete_job = self.app.delete(job_url)
         self.assertEqual(403, delete_job.status_code)
-        self.assertEqual("Unauthorised", self.decode_json(delete_job.data)['error'])
+        self.assertEqual("Forbidden", self.decode_json(delete_job.data)['error'])
 
     def test_update_company_profile(self):
         signup = self.post('/api/companies', self.numa)
@@ -274,7 +274,7 @@ class TestCase(unittest.TestCase):
         self.assertEqual(200, update_profile.status_code)
         self.assertIn('updated sucessfully', update_profile_json['message'])
 
-    def test_update_company_unauthorised(self):
+    def test_update_company_forbidden(self):
         signup = self.post('/api/companies', self.numa)
         company_url = signup.headers['Location']
         login  = self.post('/login', self.login_creds)
@@ -283,7 +283,7 @@ class TestCase(unittest.TestCase):
         update_profile = self.put(company_url, self.numa_updated_profile)
         update_profile_json = self.decode_json(update_profile.data)
         self.assertEqual(403, update_profile.status_code)
-        self.assertIn('Unauthorised', update_profile_json['error'])
+        self.assertIn('Forbidden', update_profile_json['error'])
 
 if __name__ == "__main__":
     unittest.main()
