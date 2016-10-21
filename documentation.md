@@ -1,9 +1,83 @@
-# When downloading the project you must first create a virtual env
-# Then download all the dependencies (pip install -r requirements.txt)
-# If you want to replicate my setup you can follow this tutotial (link to the digital
-ocean article)
-# You will also have to rename the config_example.py file , add your info and move it to
-the pythonista package
+# Pythonista.io
+
+Pythonista.io is a project that I started to help aggregate python related jobs. Not
+exclusive to web development. 
+I based my idea on the simple observation that it was somewhat difficult to find a python
+job, and I feel like creating a central hub for both companies and developers would
+alleviate that frustration.
+Personally, I tackled this project because I wanted to gain a deeper knowledge of Flask.
+My goals were very specific:
+
+- Learn how to design a REST API in python (using the best practices)
+- Learn how to create and run unit tests (which I had never done before [shame on me])
+- Learn postgreSQL and sqlAlchemy (I only had experience with MongoDB, mySQL and SQLite)
+- Learn how to modularise a web project in python with the use of Blueprints
+- Learn how to implement a 'Sign up with your email' functionality (including confirmation
+  handling)
+- Learn how to use some of the more advanced features of python like decorators
+- Learn how to serve and deploy a flask / python app to a linux server 
+and many more. 
+
+Overall it was a very rewarding experience because it also enabled me to discover the
+world of server administration and linux (both of which I really enjoy). It allowed to
+play and experiment with tools like nginx, gunicorn, upstart (I learned about linux
+runlevels, vagrant, port forwarding, users/groups and file permissions, threading)
+
+## The concept
+
+The idea is extremely basic, nothing that will revolutionise job applications on the web.
+Companies can sign up for an account and publish jobs, which will then be displayed in a
+nice looking interface where users will be able to filter based on the contract type.
+There are 5 different contract types: Full Time, Part Time, Contract, Internship, Remote
+Users can then access job ads and apply using the email address provided by the companies.
+It will take the form of a simple clickable link with a mailto attribute.
+
+## Some notes
+
+This is a project that I devoted a lot of time to and I still am motivated to finish it.
+However I can't afford to work on it full time anymore so if any of you reading this wish to
+contribute and offer some help in the form of pull requests, you are more than welcome to
+do so. 
+
+I'm always keen on learning from more experienced developers and if you can teach a
+young passionate dev some cool tricks and techniques don't hold back ! :smile: 
+
+Ideally, the only thing I ask when making a contribution is to give an explanation as to
+why the solution you're proposing is better (not because I have a massive ego, but by pure
+curiosity)
+
+## How to setup the project 
+
+When downloading the project, you will need to create a virtual environment as this
+project was developed using python 3.4.3
+
+To do so you will need to navigate inside the project's directory and issue the following command:
+```bash
+    virtualenv -p python3 .
+```
+this will create a virtual environment in the current folder.
+
+To activate the virtualenv just run:
+``` source bin/activate
+```
+
+The next step will be to download the project's dependencies, to do so just quickly run:
+
+```bash
+    pip install -r requirements.txt
+```
+
+you can then either run:
+```bash
+    python wsgi.py
+```
+which will launch a server on your localhost at port 5000
+
+or you can replicate my setup by following [this tutorial](tutorial).
+
+Rename the `config_example.py` file to found inside the pythonista package `config.py` and
+add your info and credentials to it.
+
 # then all you have to do is sudo start pythonista, and the server should be running
 # then visit whatever url your server is configured on and you should see the site
 # To run the unittests just call python manage.py test
@@ -54,3 +128,11 @@ choice)
 ## Next features to implement
 - Profile images for companies
 - Allow users to apply within the site
+
+
+[tutorial]: https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-14-04
+
+
+
+
+
