@@ -111,25 +111,27 @@ and finally, upgrade the DB
 
 ## here is what is left to do on the project
 
-- [] Create a reset password functionality
-- [] Create a front end using a framework of your choice
-- [] Refactor the tests 
-- [] Test email confirmation functionality 
-- [] Decorate /api/confirm/token with ogin required
-- [] Refactor serialise_json decorator
-- [] Check that the company (user) is confirmed before letting them log in
+- [ ] Create a reset password functionality
+- [ ] Create a front end using a framework of your choice
+- [ ] Refactor the tests 
+- [ ] Test email confirmation functionality 
+- [ ] Decorate /api/confirm/token with ogin required
+- [ ] Refactor serialise_json decorator
+- [ ] Check that the company (user) is confirmed before letting them log in
 
 ## Here are all the authentication and api endpoints
 
 ### Auth 
 
-/register GET 
-/login    GET 
-/login    POST 
-/logout   POST 
+```
+ /register GET 
+ /login    GET 
+ /login    POST 
+ /logout   POST 
+```
 
 ### API
-------------
+```
 /api/companies              GET
 /api/companies              POST
 /api/companies/id           GET 
@@ -140,17 +142,19 @@ and finally, upgrade the DB
 /api/jobs/id                GET
 /api/jobs/id                PUT
 /api/jobs/<contract_type>   GET 
+```
 *contract types include full-time / part-time / internship / contract / remote*
 
 ## Other notes
 
 All helper functions and methods are commented 
+
 Tests are run using the unittest standard library (feel free to use the tool of your
 choice)
 
 ## Next features to implement
-- [] Profile pictures for companies
-- [] Allow users to apply within the site
+- [ ] Profile pictures for companies
+- [ ] Allow users to apply within the site
 
 [tutorial]: https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-14-04
 
