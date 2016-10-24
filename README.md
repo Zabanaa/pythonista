@@ -9,9 +9,9 @@ Personally, I tackled this project because I wanted to gain a deeper knowledge o
 My goals were very specific:
 
 - Learn how to design a REST API in python (using the best practices)
-- Learn how to create and run unit tests (which I had never done before [shame on me])
+- Learn how to create and run unit tests (which I had never done before :flushed:)
 - Learn postgreSQL and sqlAlchemy (I only had experience with MongoDB, mySQL and SQLite)
-- Learn how to modularise a web project in python with the use of Blueprints
+- Learn how to modularise a web project in python with the use of Flask Blueprints
 - Learn how to implement a 'Sign up with your email' functionality (including confirmation
   handling)
 - Learn how to use some of the more advanced features of python like decorators
@@ -19,18 +19,23 @@ My goals were very specific:
 and many more. 
 
 Overall it was a very rewarding experience because it also enabled me to discover the
-world of server administration and linux (both of which I really enjoy). It allowed to
+world of server administration and linux (both of which I really enjoy). It allowed me to
 play and experiment with tools like nginx, gunicorn, upstart (I learned about linux
-runlevels, vagrant, port forwarding, users/groups and file permissions, threading)
+runlevels, vagrant, port forwarding, users/groups and file permissions, threading and all
+kinds of cool stuff). And I also got to solidify my knowledge of python's core feature
+(namely packages, modules and how they work under the hood)
 
 ## The concept
 
 The idea is extremely basic, nothing that will revolutionise job applications on the web.
-Companies can sign up for an account and publish jobs, which will then be displayed in a
-nice looking interface where users will be able to filter based on the contract type.
-There are 5 different contract types: Full Time, Part Time, Contract, Internship, Remote
+Companies can sign up for an account and publish jobs, which will be displayed in a
+nice looking interface where users will be able to filter them based on contract type.
+
+There are 5 different contract types: Full Time, Part Time, Contract, Internship and Remote.
+
 Users can then access job ads and apply using the email address provided by the companies.
-It will take the form of a simple clickable link with a mailto attribute.
+
+It will take the form of a simple clickable link with a `mailto` attribute.
 
 ## Some notes
 
@@ -49,37 +54,39 @@ curiosity)
 ## How to setup the project 
 
 When downloading the project, you will need to create a virtual environment as this
-project was developed using python 3.4.3
+project was developed using python 3.4.3.
 
 To do so you will need to navigate inside the project's directory and issue the following command:
 ```bash
-    virtualenv -p python3 .
+virtualenv -p python3 .
 ```
 this will create a virtual environment in the current folder.
 
 To activate the virtualenv just run:
-``` source bin/activate
+```bash
+source bin/activate
 ```
 
 The next step will be to download the project's dependencies, to do so just quickly run:
 
 ```bash
-    pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
-you can then either run:
+you can then either issue:
 ```bash
-    python wsgi.py
+python wsgi.py
 ```
-which will run a server on your localhost at port 5000. or you can replicate my setup by following [this tutorial](tutorial).
+which will run a server on your localhost at port 5000. 
 
-Rename the `config_example.py` file found inside the pythonista package `config.py` and
+Or you can replicate my setup by following [this tutorial][tutorial].
+
+Rename the `config_example.py` file found inside the `pythonista` package to `config.py` and
 add your info and credentials to it.
 
-if you chose to follow the tutorial linked above, to launch the server you simply have to
-run
+If you chose to follow the tutorial linked above, to launch the server you simply have to call
 ```bash
-    sudo start pythonista
+sudo start pythonista
 ```
 and the server should be running.
 
@@ -88,28 +95,28 @@ server.
 
 To run the tests just call 
 ```bash
-    python manage.py test
+python manage.py test
 ```
-
+## Migrations
 The migrations are handled in three steps.
 
 First, initialise the migrations
 
 ``` python
-    python manage.py db init
+python manage.py db init
 ```
 
 Then run the migrations
 ``` bash
-    python manage.py db migrate
+python manage.py db migrate
 ```
 
 and finally, upgrade the DB
 ```bash
-    python manage.py db upgrade
+python manage.py db upgrade
 ```
 
-## here is what is left to do on the project
+## Todo 
 
 - [ ] Create a reset password functionality
 - [ ] Create a front end using a framework of your choice
@@ -119,18 +126,18 @@ and finally, upgrade the DB
 - [ ] Refactor serialise_json decorator
 - [ ] Check that the company (user) is confirmed before letting them log in
 
-## Here are all the authentication and api endpoints
+## The endpoints. 
 
 ### Auth 
 
 ```
- /register GET 
+/register GET 
 
- /login    GET 
+/login    GET 
 
- /login    POST 
+/login    POST 
 
- /logout   POST 
+/logout   POST 
 ```
 
 ### API
