@@ -126,7 +126,7 @@ python manage.py db upgrade
 - [ ] Refactor serialise_json decorator
 - [ ] Check that the company (user) is confirmed before letting them log in
 
-## The endpoints. 
+## The Endpoints
 
 ### Auth 
 
