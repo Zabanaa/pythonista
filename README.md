@@ -142,25 +142,25 @@ python manage.py db upgrade
 
 ### API
 ```
-/api/companies              GET
+/api/companies                GET
 
-/api/companies              POST
+/api/companies                POST
 
-/api/companies/id           GET 
+/api/companies/<id>           GET 
 
-/api/companies/id           PUT
+/api/companies/<id>           PUT
 
-/api/companies/id/jobs      GET 
+/api/companies/<id>/jobs      GET 
 
-/api/jobs                   GET
+/api/jobs                     GET
 
-/api/jobs                   POST
+/api/jobs                     POST
 
-/api/jobs/id                GET
+/api/jobs/<id>                GET
 
-/api/jobs/id                PUT
+/api/jobs/<id>                PUT
 
-/api/jobs/<contract_type>   GET 
+/api/jobs/<contract_type>     GET 
 
 *contract types include full-time / part-time / internship / contract / remote*
 ```
