@@ -1,7 +1,7 @@
 # Pythonista.io
 
-Pythonista.io is a project that I started to help aggregate python related jobs. Not
-exclusive to web development. 
+Pythonista.io is a project that I started to help aggregate python related jobs(Not
+exclusive to web development)
 I based my idea on the simple observation that it was somewhat difficult to find a python
 job, and I feel like creating a central hub for both companies and developers would
 alleviate that frustration.
